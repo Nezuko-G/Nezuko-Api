@@ -1,0 +1,44 @@
+{
+  "auth": {
+    "all_fields_required": "All fields are required",
+    "user_already_exists": "User already exists",
+    "user_reactivated": "User reactivated successfully",
+    "user_registered": "User registered successfully",
+    "email_password_required": "Email and password are required",
+    "invalid_credentials": "Invalid credentials",
+    "login_successful": "Login successful",
+    "no_token_found": "No token found. Please login again",
+    "invalid_token": "Invalid or expired token",
+    "user_inactive": "User no longer exists or is inactive",
+    "token_refreshed": "Token refreshed successfully",
+    "logout_successful": "User has been logged out successfully",
+    "no_user_found": "No user found with this email",
+    "reset_code_sent": "Verification code sent to your email",
+    "no_reset_code": "No reset code found. Please request a new one",
+    "invalid_verification_code": "Invalid verification code",
+    "code_expired": "Verification code has expired. Please request a new one",
+    "code_verified": "Code verified successfully. You can now reset your password",
+    "password_reset_successful": "Password reset successful. You can now login with your new password"
+  },
+  "middleware": {
+    "token_not_provided": "No token provided. Please login",
+    "invalid_or_expired_token": "Invalid or expired token"
+  },
+  "validation": {
+    "all_fields_required": "All fields are required",
+    "name_required": "Name is required",
+    "name_min": "Name must be at least 2 characters long",
+    "name_max": "Name must not exceed 100 characters",
+    "email_required": "Email is required",
+    "email_invalid": "Please provide a valid email address",
+    "email_in_use": "Email already in use",
+    "email_reactivate": "This email is associated with a deleted account. Please contact support to reactivate",
+    "password_required": "Password is required",
+    "password_min": "Password must be at least 8 characters long",
+    "password_max": "Password must not exceed 40 characters",
+    "password_pattern": "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character (@$!%*?&#)",
+    "role_required": "Role is required",
+    "role_invalid": "Invalid role",
+    "role_not_allowed": "You are not allowed to use this role"
+  }
+}
