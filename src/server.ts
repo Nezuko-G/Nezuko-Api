@@ -1,9 +1,7 @@
-import dotenv from "dotenv";
+import "dotenv/config";
 import http from "http";
 import app from "@/app.js";
-import { connectDB } from "@/shared/database/mongo.js";
-
-dotenv.config({ quiet: true });
+import { connectDB, disconnectDB } from "@/shared/database/prisma.js";
 
 const PORT = normalizePort(process.env.PORT || "5000");
 app.set("port", PORT);
@@ -56,6 +54,24 @@ function onError(error: NodeJS.ErrnoException): void {
 
 function onListening(): void {
   const addr = server.address();
-  const bind = typeof addr === "string" ? `pipe ${addr}` : `port ${addr?.port}`;
-  console.log(`Server running on ${bind}`);
+  const bind = typeof addr === "string" ? `pipe ${addr}` : `${addr?.port}`;
+  console.log(`Server running on http://localhost:${bind}`);
 }
+// Graceful shutdown
+process.on("SIGTERM", async () => {
+  console.log("SIGTERM signal received: closing HTTP server");
+  server.close(async () => {
+    await disconnectDB();
+    console.log("HTTP server closed");
+    process.exit(0);
+  });
+});
+
+process.on("SIGINT", async () => {
+  console.log("SIGINT signal received: closing HTTP server");
+  server.close(async () => {
+    await disconnectDB();
+    console.log("HTTP server closed");
+    process.exit(0);
+  });
+});
