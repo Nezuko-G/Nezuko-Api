@@ -5,12 +5,8 @@ import { authRepository } from "./auth.repository";
 
 function cleanUser(user: any) {
   if (!user) return null;
-  const obj = user.toObject ? user.toObject() : { ...user };
-  delete obj.password;
-  delete obj.__v;
-  delete obj.is_deleted;
-  delete obj.is_active;
-  return obj;
+  const { password, isDeleted, isActive, ...cleanedUser } = user;
+  return cleanedUser;
 }
 
 export const authService = {
@@ -25,11 +21,11 @@ export const authService = {
 
     const existingUser = await authRepository.findByEmail(normalizedEmail);
 
-    if (existingUser && !existingUser.is_deleted && existingUser.is_active) {
+    if (existingUser && !existingUser.isDeleted && existingUser.isActive) {
       throw new BadRequestError(t("validation.email_in_use"));
     }
 
-    if (existingUser && existingUser.is_deleted) {
+    if (existingUser && existingUser.isDeleted) {
       throw new BadRequestError(t("validation.email_reactivate"));
     }
 
@@ -39,14 +35,14 @@ export const authService = {
       name,
       email: normalizedEmail,
       password: hashedPassword,
-      bio,
-      avatar,
+      bio: bio || null,
+      avatar: avatar || null,
     });
 
     const token = generateToken(
       newUser.name,
       newUser.email,
-      newUser._id,
+      newUser.id.toString(),
       newUser.role,
     );
 
@@ -69,11 +65,11 @@ export const authService = {
       throw new BadRequestError(t("auth.invalid_credentials"));
     }
 
-    if (user.is_deleted) {
+    if (user.isDeleted) {
       throw new BadRequestError(t("auth.user_deleted"));
     }
 
-    if (!user.is_active) {
+    if (!user.isActive) {
       throw new BadRequestError(t("auth.user_not_active"));
     }
 
@@ -85,7 +81,7 @@ export const authService = {
     const token = generateToken(
       user.name,
       user.email,
-      user._id,
+      user.id.toString(),
       user.role,
     );
 
