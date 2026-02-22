@@ -1,43 +1,52 @@
-import User from "./auth.model.js";
+import prisma from "@/shared/database/prisma";
 
 export const authRepository = {
   async findByEmail(email: string) {
-    return await User.findOne({ email });
+    return await prisma.user.findUnique({
+      where: { email },
+    });
   },
 
   async findActiveUserByEmail(email: string) {
-    return await User.findOne({
-      email,
-      is_deleted: false,
-      is_active: true,
+    return await prisma.user.findFirst({
+      where: {
+        email,
+        isDeleted: false,
+        isActive: true,
+      },
     });
   },
 
   async findDeletedUserByEmail(email: string) {
-    return await User.findOne({
-      email,
-      is_deleted: true,
+    return await prisma.user.findFirst({
+      where: {
+        email,
+        isDeleted: true,
+      },
     });
   },
 
   async createUser(data: any) {
-    const user = new User({
-      ...data,
-      is_deleted: false,
-      is_active: true,
+    return await prisma.user.create({
+      data: {
+        ...data,
+        isDeleted: false,
+        isActive: true,
+      },
     });
-    return await user.save();
   },
 
-  async reactivateUserById(id: string) {
-    return await User.findByIdAndUpdate(
-      id,
-      { is_deleted: false, is_active: true },
-      { new: true },
-    );
+  async reactivateUserById(id: number) {
+    return await prisma.user.update({
+      where: { id },
+      data: { isDeleted: false, isActive: true },
+    });
   },
 
-  async updateUserById(id: string, data: Partial<any>) {
-    return await User.findByIdAndUpdate(id, data, { new: true });
+  async updateUserById(id: number, data: Partial<any>) {
+    return await prisma.user.update({
+      where: { id },
+      data,
+    });
   },
 };
