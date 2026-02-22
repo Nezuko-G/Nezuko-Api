@@ -6,7 +6,6 @@ import { validate } from "@/shared/middleware/validate.middleware";
 
 const router = Router();
 
-
 router.post(
     "/signup",
     limiter,
