@@ -8,9 +8,8 @@ import hpp from "hpp";
 import timeout from "connect-timeout";
 import corsOptions from "@/shared/config/cores.options";
 import dotenv from "dotenv";
-import { NotFoundError } from "@/shared/errors/errors";
 import globalErrorHandler from "@/shared/middleware/globalErrorHandler.middleware";
-import AuthRoutes from "@/features/auth/auth.routes";
+import globalRoutes from "@/shared/router/global.route";
 import i18n from "i18n";
 import { i18nMiddleware } from "@/shared/config/i18n";
 import { notFoundMiddleware } from "@/shared/middleware/not_found.middleware";
@@ -77,7 +76,7 @@ if (process.env.NODE_ENV === "development") {
 
 app.use(compression());
 
-app.use("/api/v1", AuthRoutes);
+app.use("/api/v1", globalRoutes);
 
 app.use((req: Request, _res: Response, next: NextFunction) => {
   if (!req.timedout) next();
