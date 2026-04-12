@@ -1,10 +1,8 @@
 import jwt, { Secret, SignOptions, JwtPayload } from "jsonwebtoken";
 import type { Types } from "mongoose";
-import type { ROLES } from "./constants.js";
+import type { ROLES } from "@/shared/enums/enums.js";
 
 export interface TokenPayload extends JwtPayload {
-    name: string;
-    email: string;
     id: Types.ObjectId;
     role: ROLES | string;
 }
@@ -20,18 +18,16 @@ const getJwtSecret = (): string => {
 };
 
 export const generateToken = (
-    name: string,
-    email: any,
     id: Types.ObjectId,
     role: ROLES | string,
 ) => {
     const secret: Secret = getJwtSecret() as Secret;
 
-    const expiresIn: any = process.env.JWT_EXPIRES_IN || "3d";
+    const expiresIn: any = process.env.JWT_EXPIRES_IN || "7d";
 
     const options: SignOptions = { expiresIn };
 
-    return jwt.sign({ name, email, id, role }, secret, options);
+    return jwt.sign({ id, role }, secret, options);
 };
 
 

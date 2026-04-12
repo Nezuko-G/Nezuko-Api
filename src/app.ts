@@ -7,12 +7,14 @@ import compression from "compression";
 import hpp from "hpp";
 import timeout from "connect-timeout";
 import corsOptions from "@/shared/config/cores.options";
-import dotenv from "dotenv";
 import globalErrorHandler from "@/shared/middleware/globalErrorHandler.middleware";
-import globalRoutes from "@/shared/router/global.route";
 import i18n from "i18n";
 import { i18nMiddleware } from "@/shared/config/i18n";
 import { notFoundMiddleware } from "@/shared/middleware/not_found.middleware";
+import { GlobalRouter } from "./modules/dashboard";
+import passport, { initGoogleStrategy } from "@/modules/auth/auth.passport";
+import dotenv from "dotenv";
+
 
 dotenv.config({ quiet: true });
 
@@ -46,6 +48,10 @@ app.use(
   }),
 );
 
+app.use(passport.initialize());
+initGoogleStrategy();
+
+
 app.use((_req: Request, res: Response, next: NextFunction) => {
   res.setHeader("X-Content-Type-Options", "nosniff");
   res.setHeader("X-Frame-Options", "DENY");
@@ -54,9 +60,20 @@ app.use((_req: Request, res: Response, next: NextFunction) => {
   next();
 });
 
-app.use(cors(corsOptions));
+app.use(cors({
+  origin: "*",
+  credentials: true
+}));
+
 app.use(timeout("50s"));
-app.use(express.json({ limit: "10kb" }));
+app.use(express.json({
+  limit: "10kb",
+  verify: (req: any, _res, buf) => {
+    if (req.originalUrl.includes("/webhook")) {
+      req.rawBody = buf;
+    }
+  }
+}));
 app.use(express.urlencoded({ extended: true, limit: "10kb" }));
 app.use(cookieParser());
 app.use(i18n.init);
@@ -76,7 +93,7 @@ if (process.env.NODE_ENV === "development") {
 
 app.use(compression());
 
-app.use("/api/v1", globalRoutes);
+app.use("/api/v1", GlobalRouter);
 
 app.use((req: Request, _res: Response, next: NextFunction) => {
   if (!req.timedout) next();
