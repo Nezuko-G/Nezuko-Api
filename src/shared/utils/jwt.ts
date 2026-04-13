@@ -1,41 +1,40 @@
-import jwt, { Secret, SignOptions, JwtPayload } from "jsonwebtoken";
-import type { Types } from "mongoose";
-import type { ROLES } from "@/shared/enums/enums.js";
+import jwt, { Secret, JwtPayload } from "jsonwebtoken";
+import { UserRole } from "@prisma/client";
 
 export interface TokenPayload extends JwtPayload {
-    id: Types.ObjectId;
-    role: ROLES | string;
+  userId: string;
+  tenantId?: string;
+  role: UserRole | "SUPER_ADMIN";
+  type: "user" | "super_admin";
 }
 
 const getJwtSecret = (): string => {
-    const secret = process.env.JWT_SECRET;
-
-    if (!secret) {
-        throw new Error("JWT_SECRET is not defined");
-    }
-
-    return secret;
+  const secret = process.env.JWT_SECRET;
+  if (!secret) throw new Error("JWT_SECRET is not defined");
+  return secret;
 };
 
 export const generateToken = (
-    id: Types.ObjectId,
-    role: ROLES | string,
-) => {
-    const secret: Secret = getJwtSecret() as Secret;
-
-    const expiresIn: any = process.env.JWT_EXPIRES_IN || "7d";
-
-    const options: SignOptions = { expiresIn };
-
-    return jwt.sign({ id, role }, secret, options);
+  userId: string,
+  role: UserRole | "SUPER_ADMIN",
+  type: "user" | "super_admin",
+  tenantId?: string
+): string => {
+  const secret: Secret = getJwtSecret();
+  const expiresIn: any = process.env.JWT_EXPIRES_IN || "7d";
+  const payload: Omit<TokenPayload, keyof JwtPayload> = {
+    userId,
+    role,
+    type,
+    ...(tenantId && { tenantId }),
+  };
+  return jwt.sign(payload, secret, { expiresIn });
 };
 
-
 export const verifyToken = (token: string): TokenPayload | null => {
-    try {
-        return jwt.verify(token, getJwtSecret()) as TokenPayload;
-
-    } catch (error) {
-        return null;
-    }
+  try {
+    return jwt.verify(token, getJwtSecret()) as TokenPayload;
+  } catch {
+    return null;
+  }
 };
