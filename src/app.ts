@@ -6,14 +6,12 @@ import cookieParser from "cookie-parser";
 import compression from "compression";
 import hpp from "hpp";
 import timeout from "connect-timeout";
-import corsOptions from "@/shared/config/cores.options";
 import globalErrorHandler from "@/shared/middleware/globalErrorHandler.middleware";
 import i18n from "i18n";
 import { i18nMiddleware } from "@/shared/config/i18n";
 import { notFoundMiddleware } from "@/shared/middleware/not_found.middleware";
-import { GlobalRouter } from "./modules/dashboard";
-import passport, { initGoogleStrategy } from "@/modules/auth/auth.passport";
 import dotenv from "dotenv";
+import { GlobalRouter } from "./modules/dashboard";
 
 
 dotenv.config({ quiet: true });
@@ -48,8 +46,6 @@ app.use(
   }),
 );
 
-app.use(passport.initialize());
-initGoogleStrategy();
 
 
 app.use((_req: Request, res: Response, next: NextFunction) => {
