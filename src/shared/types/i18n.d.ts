@@ -1,4 +1,5 @@
 import { TFunction } from "i18n";
+import { UserRole } from "@prisma/client";
 
 declare module "express-serve-static-core" {
   interface Request {
@@ -6,6 +7,12 @@ declare module "express-serve-static-core" {
     __n: TFunction;
     _t: TFunction;
     _tn: TFunction;
+    user?: {
+      id: string;
+      tenantId: string;
+      role: UserRole;
+      type: "user";
+    };
   }
 
   interface Response {

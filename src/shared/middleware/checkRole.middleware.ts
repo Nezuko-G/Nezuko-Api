@@ -1,12 +1,9 @@
 import type { Request, Response, NextFunction } from "express";
 import { ForbiddenError, UnauthorizedError } from "../errors/errors";
+import { UserRole } from "@prisma/client";
 
-interface AuthRequest extends Request {
-  user?: { role?: string };
-}
-
-export const checkRole = (allowedRoles: string[]) => {
-  return (req: AuthRequest, res: Response, next: NextFunction) => {
+export const checkRole = (allowedRoles: UserRole[]) => {
+  return (req: Request, _res: Response, next: NextFunction) => {
     const t = req.__ || req._t || ((key: any) => key);
 
     const userRole = req.user?.role;
