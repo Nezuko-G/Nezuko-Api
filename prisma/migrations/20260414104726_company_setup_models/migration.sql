@@ -57,3 +57,4 @@ ALTER TABLE "company_settings" ADD CONSTRAINT "company_settings_tenant_id_fkey" 
 
 -- AddForeignKey
 ALTER TABLE "attendance_settings" ADD CONSTRAINT "attendance_settings_tenant_id_fkey" FOREIGN KEY ("tenant_id") REFERENCES "tenants"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ 
