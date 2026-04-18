@@ -1,6 +1,6 @@
 import { BadRequestError, NotFoundError } from "@/shared/errors/errors.js";
 import { companyRepository } from "./company.repository.js";
-import cloudinary from "@/shared/config/cloudinary.js";
+// import cloudinary from "@/shared/config/cloudinary.js";
 import { generateSlug } from "@/shared/utils/helpers.js";
 
 type UpdateCompanyInfoInput = {
