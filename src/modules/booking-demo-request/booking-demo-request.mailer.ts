@@ -1,17 +1,6 @@
 import { EmployeeCount, Interest } from "@prisma/client";
 import { mailer } from "@/shared/config/mailer.js";
-
-type BookingDemoMailPayload = {
-  id: string;
-  fullName: string;
-  email: string;
-  companyName: string;
-  jobTitle: string;
-  phone: string;
-  employeeCount: EmployeeCount;
-  interests: Interest[];
-  createdAt: Date;
-};
+import type { BookingDemoMailPayload } from "@/shared/interfaces/booking-demo-request.interface.js";
 
 function getEnv(name: string): string {
   const value = process.env[name];
