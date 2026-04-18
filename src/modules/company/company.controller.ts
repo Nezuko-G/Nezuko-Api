@@ -36,6 +36,7 @@ export const companyController = {
       const data = await companyService.uploadCompanyLogo(
         req.user!.tenantId,
         req.file as Express.Multer.File,
+        req._t,
       );
 
       res.status(200).json({
@@ -113,6 +114,7 @@ export const companyController = {
       const data = await companyService.updateAttendanceSettings(
         req.user!.tenantId,
         req.body,
+        req._t,
       );
 
       res.status(200).json({
