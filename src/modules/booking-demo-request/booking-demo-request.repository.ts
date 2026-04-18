@@ -1,15 +1,6 @@
 import prisma from "@/shared/config/prisma.js";
 import { EmployeeCount, Interest } from "@prisma/client";
-
-type CreateDemoRequestInput = {
-  fullName: string;
-  email: string;
-  companyName: string;
-  jobTitle: string;
-  phone: string;
-  employeeCount: EmployeeCount;
-  interests: Interest[];
-};
+import type { CreateDemoRequestInput } from "@/shared/interfaces/booking-demo-request.interface.js";
 
 export const bookingDemoRequestRepository = {
   findDuplicate(email: string, companyName: string, phone: string) {
