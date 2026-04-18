@@ -1,44 +1,15 @@
 import { BadRequestError, NotFoundError } from "@/shared/errors/errors.js";
 import { companyRepository } from "./company.repository.js";
-// import cloudinary from "@/shared/config/cloudinary.js";
 import { generateSlug } from "@/shared/utils/helpers.js";
+import cloudinary from "@/shared/config/cloudinary.js";
+import type {
+  AttendanceSettingsUpdatePersistenceInput,
+  UpdateAttendanceSettingsInput,
+  UpdateCompanyInfoInput,
+  UpdateCompanySettingsInput,
+} from "@/shared/interfaces/company.interface.js";
 
-type UpdateCompanyInfoInput = {
-  name?: string;
-  slug?: string;
-  industry?: string | null;
-  country?: string | null;
-  city?: string | null;
-  address?: string | null;
-  phone?: string | null;
-  website?: string | null;
-  taxNumber?: string | null;
-  commercialReg?: string | null;
-  currency?: string | null;
-  timezone?: string | null;
-};
-
-type UpdateCompanySettingsInput = {
-  language?: "ar" | "en";
-  dateFormat?: "DD/MM/YYYY" | "MM/DD/YYYY" | "YYYY-MM-DD";
-  fiscalYearStart?: number;
-};
-
-type UpdateAttendanceSettingsInput = {
-  workDayStart?: string;
-  workDayEnd?: string;
-  workingDays?: number[];
-  lateGraceMinutes?: number;
-  earlyLeaveGrace?: number;
-  overtimeThreshold?: number;
-  roundingEnabled?: boolean;
-  roundingMinutes?: number;
-  requireBiometric?: boolean;
-  geofenceEnabled?: boolean;
-  geofenceLat?: number;
-  geofenceLng?: number;
-  geofenceRadiusM?: number;
-};
+type Translator = (key: string) => string;
 
 type NullableCompanyInfoField = Exclude<
   keyof UpdateCompanyInfoInput,
@@ -168,9 +139,13 @@ export const companyService = {
     return companyRepository.updateTenantInfo(tenantId, normalizedPayload);
   },
 
-  async uploadCompanyLogo(tenantId: string, file: Express.Multer.File) {
+  async uploadCompanyLogo(
+    tenantId: string,
+    file: Express.Multer.File,
+    t: Translator,
+  ) {
     if (!file) {
-      throw new BadRequestError("Logo file is required");
+      throw new BadRequestError(t("company.logo_required"));
     }
 
     const tenant = await companyRepository.findTenantById(tenantId);
@@ -250,6 +225,7 @@ export const companyService = {
   async updateAttendanceSettings(
     tenantId: string,
     payload: UpdateAttendanceSettingsInput,
+    t: Translator,
   ) {
     const tenant = await companyRepository.findTenantById(tenantId);
 
@@ -262,12 +238,12 @@ export const companyService = {
     const merged = { ...current, ...payload };
 
     if (!isWorkdayRangeValid(merged.workDayStart, merged.workDayEnd)) {
-      throw new BadRequestError("workDayStart must be before workDayEnd");
+      throw new BadRequestError(t("company.attendance.workday_range_invalid"));
     }
 
     if (merged.roundingEnabled && !merged.roundingMinutes) {
       throw new BadRequestError(
-        "roundingMinutes is required when roundingEnabled is true",
+        t("company.attendance.rounding_minutes_required"),
       );
     }
 
@@ -277,26 +253,12 @@ export const companyService = {
         merged.geofenceLng == null ||
         merged.geofenceRadiusM == null)
     ) {
-      throw new BadRequestError(
-        "geofenceLat, geofenceLng and geofenceRadiusM are required when geofenceEnabled is true",
-      );
+      throw new BadRequestError(t("company.attendance.geofence_required"));
     }
 
-    const updatePayload: {
-      workDayStart?: string;
-      workDayEnd?: string;
-      workingDays?: number[];
-      lateGraceMinutes?: number;
-      earlyLeaveGrace?: number;
-      overtimeThreshold?: number;
-      roundingEnabled?: boolean;
-      roundingMinutes?: number | null;
-      requireBiometric?: boolean;
-      geofenceEnabled?: boolean;
-      geofenceLat?: number | null;
-      geofenceLng?: number | null;
-      geofenceRadiusM?: number | null;
-    } = { ...payload };
+    const updatePayload: AttendanceSettingsUpdatePersistenceInput = {
+      ...payload,
+    };
 
     if (payload.roundingEnabled === false) {
       updatePayload.roundingMinutes = null;

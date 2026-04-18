@@ -23,8 +23,7 @@ export const phoneSchema = Joi.string()
     return value;
   }, "global phone number validation")
   .messages({
-    "string.pattern.base":
-      "Phone number must be in international format like +201012345678",
+    "string.pattern.base": "validation.phone.invalid",
   });
 
 /**
@@ -50,8 +49,7 @@ export const phoneSchemaOptional = Joi.string()
   }, "global phone number validation")
   .allow(null, "")
   .messages({
-    "string.pattern.base":
-      "Phone number must be in international format like +201012345678",
+    "string.pattern.base": "validation.phone.invalid",
   });
 
 /**
@@ -63,8 +61,7 @@ export const websiteSchema = Joi.string()
   .pattern(websiteRegex)
   .allow(null, "")
   .messages({
-    "string.pattern.base":
-      "Website must be a valid URL with domain extension like https://example.com",
+    "string.pattern.base": "company.website.invalid",
   });
 
 /**
@@ -75,6 +72,5 @@ export const websiteSchemaRequired = Joi.string()
   .pattern(websiteRegex)
   .required()
   .messages({
-    "string.pattern.base":
-      "Website must be a valid URL with domain extension like https://example.com",
+    "string.pattern.base": "company.website.invalid",
   });

@@ -1,42 +1,10 @@
 import prisma from "@/shared/config/prisma.js";
 import { randomUUID } from "node:crypto";
-
-type CompanyInfoUpdateInput = {
-  name?: string;
-  slug?: string;
-  industry?: string | null;
-  country?: string | null;
-  city?: string | null;
-  address?: string | null;
-  phone?: string | null;
-  website?: string | null;
-  taxNumber?: string | null;
-  commercialReg?: string | null;
-  currency?: string | null;
-  timezone?: string | null;
-};
-
-type CompanySettingsUpdateInput = {
-  language?: "ar" | "en";
-  dateFormat?: "DD/MM/YYYY" | "MM/DD/YYYY" | "YYYY-MM-DD";
-  fiscalYearStart?: number;
-};
-
-type AttendanceSettingsUpdateInput = {
-  workDayStart?: string;
-  workDayEnd?: string;
-  workingDays?: number[];
-  lateGraceMinutes?: number;
-  earlyLeaveGrace?: number;
-  overtimeThreshold?: number;
-  roundingEnabled?: boolean;
-  roundingMinutes?: number | null;
-  requireBiometric?: boolean;
-  geofenceEnabled?: boolean;
-  geofenceLat?: number | null;
-  geofenceLng?: number | null;
-  geofenceRadiusM?: number | null;
-};
+import type {
+  AttendanceSettingsUpdatePersistenceInput,
+  UpdateCompanyInfoInput,
+  UpdateCompanySettingsInput,
+} from "@/shared/interfaces/company.interface.js";
 
 export const companyRepository = {
   findTenantById(tenantId: string) {
@@ -63,7 +31,7 @@ export const companyRepository = {
     });
   },
 
-  updateTenantInfo(tenantId: string, data: CompanyInfoUpdateInput) {
+  updateTenantInfo(tenantId: string, data: UpdateCompanyInfoInput) {
     return prisma.tenant.update({
       where: { id: tenantId },
       data,
@@ -120,7 +88,7 @@ export const companyRepository = {
     });
   },
 
-  updateCompanySettings(tenantId: string, data: CompanySettingsUpdateInput) {
+  updateCompanySettings(tenantId: string, data: UpdateCompanySettingsInput) {
     return prisma.companySettings.update({
       where: { tenantId },
       data,
@@ -173,7 +141,7 @@ export const companyRepository = {
 
   updateAttendanceSettings(
     tenantId: string,
-    data: AttendanceSettingsUpdateInput,
+    data: AttendanceSettingsUpdatePersistenceInput,
   ) {
     return prisma.attendanceSettings.update({
       where: { tenantId },
