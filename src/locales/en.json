@@ -24,6 +24,13 @@
     "forbidden": "You do not have permission to access this page",
     "user_not_found": "User not found"
   },
+  "employee": {
+    "created_successfully": "Employee created successfully",
+    "email_already_exists": "Email already exists",
+    "not_found": "Employee not found",
+    "updated_successfully": "Employee updated successfully",
+    "deleted_successfully": "Employee terminated successfully"
+  },
   "middleware": {
     "token_not_provided": "No token provided. Please login",
     "invalid_or_expired_token": "Invalid or expired token"

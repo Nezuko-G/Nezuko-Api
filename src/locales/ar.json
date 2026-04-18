@@ -24,6 +24,13 @@
     "forbidden": "ليس لديك صلاحية للوصول إلى هذه الصفحة",
     "user_not_found": "المستخدم غير موجود"
   },
+  "employee": {
+    "created_successfully": "تم إضافة الموظف بنجاح",
+    "email_already_exists": "البريد الإلكتروني مستخدم بالفعل",
+    "not_found": "الموظف غير موجود",
+    "updated_successfully": "تم تحديث بيانات الموظف بنجاح",
+    "deleted_successfully": "تم إنهاء خدمة الموظف بنجاح"
+  },
   "middleware": {
     "token_not_provided": "لم يتم توفير رمز المصادقة. يرجى تسجيل الدخول",
     "invalid_or_expired_token": "الرمز غير صالح أو منتهي الصلاحية"
