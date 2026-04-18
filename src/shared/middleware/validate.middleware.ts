@@ -1,17 +1,17 @@
-import { BadRequestError } from "@/shared/errors/errors";
 import type { Request, Response, NextFunction } from "express";
 import type { ObjectSchema } from "joi";
+import { BadRequestError } from "@/shared/errors/errors.js";
 
-export const validate = (schema: ObjectSchema | ((req: Request) => ObjectSchema), property: "body" | "params" | "query" = "body") => {
-  return async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const localizedSchema = typeof schema === "function" ? schema(req) : schema;
-      const value = await localizedSchema.validateAsync(req[property], { abortEarly: false });
-      req[property] = value;
-      next();
-    } catch (error: any) {
-      const messages = error.details ? error.details.map((err: any) => err.message) : [error.message];
-      next(new BadRequestError(messages));
+export const validate = (schema: ObjectSchema) => {
+  return (req: Request, res: Response, next: NextFunction) => {
+    const { error } = schema.validate(req.body, { abortEarly: true });
+
+    if (error) {
+      const messageKey = error.details[0].message;
+      const translated = req._t(messageKey);
+      return next(new BadRequestError(translated));
     }
+
+    next();
   };
 };

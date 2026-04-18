@@ -26,10 +26,58 @@
   },
   "employee": {
     "created_successfully": "Employee created successfully",
-    "email_already_exists": "Email already exists",
-    "not_found": "Employee not found",
     "updated_successfully": "Employee updated successfully",
-    "deleted_successfully": "Employee terminated successfully"
+    "deleted_successfully": "Employee terminated successfully",
+    "not_found": "Employee not found",
+    "email_already_exists": "Email already exists",
+    "document_uploaded": "Document uploaded successfully",
+    "document_deleted": "Document deleted successfully",
+    "document_not_found": "Document not found"
+  },
+  "validation": {
+    "body": {
+      "empty": "Request body must have at least one field"
+    },
+    "firstName": {
+      "required": "First name is required",
+      "min": "First name must be at least 2 characters",
+      "max": "First name must not exceed 50 characters"
+    },
+    "lastName": {
+      "required": "Last name is required",
+      "min": "Last name must be at least 2 characters",
+      "max": "Last name must not exceed 50 characters"
+    },
+    "email": {
+      "required": "Email is required",
+      "invalid": "Please provide a valid email address"
+    },
+    "jobTitle": {
+      "max": "Job title must not exceed 100 characters"
+    },
+    "hireDate": {
+      "invalid": "Please provide a valid hire date"
+    },
+    "gender": {
+      "invalid": "Gender must be either MALE or FEMALE"
+    },
+    "dateOfBirth": {
+      "invalid": "Please provide a valid date of birth",
+      "max": "Date of birth cannot be in the future"
+    },
+    "phone": {
+      "invalid": "Please provide a valid phone number"
+    },
+    "departmentId": {
+      "invalid": "Please provide a valid department ID"
+    },
+    "fileName": {
+      "required": "File name is required"
+    },
+    "expiryDate": {
+      "invalid": "Please provide a valid expiry date",
+      "min": "Expiry date must be in the future"
+    }
   },
   "middleware": {
     "token_not_provided": "No token provided. Please login",
