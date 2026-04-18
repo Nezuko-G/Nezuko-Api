@@ -66,7 +66,8 @@
       "max": "Date of birth cannot be in the future"
     },
     "phone": {
-      "invalid": "Please provide a valid phone number"
+      "required": "Phone number is required",
+      "invalid": "Please provide a valid phone number in international format, e.g. +201012345678"
     },
     "departmentId": {
       "invalid": "Please provide a valid department ID"
@@ -79,8 +80,136 @@
       "min": "Expiry date must be in the future"
     }
   },
+  "company": {
+    "logo_required": "Company logo file is required",
+    "name": {
+      "min": "Company name must be at least 2 characters",
+      "max": "Company name must not exceed 120 characters"
+    },
+    "industry": {
+      "max": "Industry must not exceed 100 characters"
+    },
+    "country": {
+      "max": "Country must not exceed 100 characters"
+    },
+    "city": {
+      "max": "City must not exceed 100 characters"
+    },
+    "address": {
+      "max": "Address must not exceed 255 characters"
+    },
+    "website": {
+      "invalid": "Website must be a valid URL with domain extension like https://example.com"
+    },
+    "taxNumber": {
+      "max": "Tax number must not exceed 120 characters"
+    },
+    "commercialReg": {
+      "max": "Commercial registration must not exceed 120 characters"
+    },
+    "currency": {
+      "max": "Currency must not exceed 12 characters"
+    },
+    "timezone": {
+      "max": "Timezone must not exceed 60 characters"
+    },
+    "settings": {
+      "language": {
+        "invalid": "Language must be either ar or en"
+      },
+      "dateFormat": {
+        "invalid": "Date format must be one of DD/MM/YYYY, MM/DD/YYYY, or YYYY-MM-DD"
+      },
+      "fiscalYearStart": {
+        "invalid": "Fiscal year start must be a valid month number",
+        "range": "Fiscal year start must be between 1 and 12"
+      }
+    },
+    "attendance": {
+      "workday_range_invalid": "Work day start must be before work day end",
+      "rounding_minutes_required": "Rounding minutes are required when rounding is enabled",
+      "geofence_required": "Geofence latitude, longitude, and radius are required when geofence is enabled",
+      "time": {
+        "invalid": "Time must be in HH:mm format"
+      },
+      "workingDays": {
+        "invalid": "Working days must be an array of weekday numbers",
+        "min": "Working days must contain at least one day",
+        "unique": "Working days must not contain duplicates",
+        "range": "Working day values must be between 0 and 6"
+      },
+      "lateGraceMinutes": {
+        "invalid": "Late grace minutes must be a valid integer",
+        "range": "Late grace minutes must be between 0 and 120"
+      },
+      "earlyLeaveGrace": {
+        "invalid": "Early leave grace must be a valid integer",
+        "range": "Early leave grace must be between 0 and 240"
+      },
+      "overtimeThreshold": {
+        "invalid": "Overtime threshold must be a valid integer",
+        "range": "Overtime threshold must be between 0 and 480"
+      },
+      "roundingMinutes": {
+        "invalid": "Rounding minutes must be a valid integer",
+        "allowed": "Rounding minutes must be one of 5, 10, 15, or 30"
+      },
+      "geofenceLat": {
+        "invalid": "Geofence latitude must be a valid number",
+        "range": "Geofence latitude must be between -90 and 90"
+      },
+      "geofenceLng": {
+        "invalid": "Geofence longitude must be a valid number",
+        "range": "Geofence longitude must be between -180 and 180"
+      },
+      "geofenceRadiusM": {
+        "invalid": "Geofence radius must be a valid integer",
+        "range": "Geofence radius must be between 1 and 100000 meters"
+      }
+    }
+  },
+  "booking_demo_request": {
+    "validation": {
+      "fullName": {
+        "required": "Full name is required",
+        "min": "Full name must be at least 2 characters",
+        "max": "Full name must not exceed 100 characters"
+      },
+      "email": {
+        "required": "Email is required",
+        "invalid": "Please provide a valid email address"
+      },
+      "companyName": {
+        "required": "Company name is required",
+        "min": "Company name must be at least 2 characters",
+        "max": "Company name must not exceed 120 characters"
+      },
+      "jobTitle": {
+        "required": "Job title is required",
+        "min": "Job title must be at least 2 characters",
+        "max": "Job title must not exceed 80 characters"
+      },
+      "phone": {
+        "required": "Phone number is required",
+        "invalid": "Please provide a valid phone number in international format, e.g. +201012345678"
+      },
+      "employeeCount": {
+        "required": "Employee count is required",
+        "invalid": "Please select a valid employee count"
+      },
+      "interests": {
+        "required": "At least one interest is required",
+        "min": "At least one interest is required",
+        "invalid": "Please select valid interests"
+      }
+    },
+    "invalid_employee_count": "Invalid employee count value",
+    "invalid_interests": "Invalid interests value",
+    "duplicate_request": "Demo request already submitted"
+  },
   "middleware": {
     "token_not_provided": "No token provided. Please login",
-    "invalid_or_expired_token": "Invalid or expired token"
+    "invalid_or_expired_token": "Invalid or expired token",
+    "invalid_file_type": "Only JPEG, PNG, and PDF files are allowed"
   }
 }
