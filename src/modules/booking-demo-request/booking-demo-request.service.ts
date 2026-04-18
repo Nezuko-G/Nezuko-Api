@@ -2,16 +2,9 @@ import { EmployeeCount, Interest } from "@prisma/client";
 import { bookingDemoRequestRepository } from "./booking-demo-request.repository.js";
 import { BadRequestError, ConflictError } from "@/shared/errors/errors.js";
 import { bookingDemoRequestMailer } from "./booking-demo-request.mailer.js";
+import type { CreateBookingDemoRequestInput } from "@/shared/interfaces/booking-demo-request.interface.js";
 
-type CreateBookingDemoRequestInput = {
-  fullName: string;
-  email: string;
-  companyName: string;
-  jobTitle: string;
-  phone: string;
-  employeeCount: string;
-  interests: string[];
-};
+type Translator = (key: string) => string;
 
 const employeeCountMap: Record<string, EmployeeCount> = {
   FROM_1_TO_25: EmployeeCount.FROM_1_TO_25,
@@ -38,29 +31,26 @@ function normalizeKey(value: string): string {
   return value.trim().toUpperCase();
 }
 
-function mapEmployeeCount(value: string): EmployeeCount {
-  const mapped =
-    employeeCountMap[normalizeKey(value)] ?? employeeCountMap[value.trim()];
+function mapEmployeeCount(value: string, t: Translator): EmployeeCount {
+  const mapped = employeeCountMap[normalizeKey(value)] ?? employeeCountMap[value.trim()];
   if (!mapped) {
-    throw new BadRequestError("Invalid employeeCount value");
+    throw new BadRequestError(t("booking_demo_request.invalid_employee_count"));
   }
   return mapped;
 }
 
-function mapInterests(values: string[]): Interest[] {
-  const mapped = values.map(
-    (value) => interestMap[normalizeKey(value)] ?? interestMap[value.trim()],
-  );
+function mapInterests(values: string[], t: Translator): Interest[] {
+  const mapped = values.map((value) => interestMap[normalizeKey(value)] ?? interestMap[value.trim()]);
 
   if (mapped.some((value) => !value)) {
-    throw new BadRequestError("Invalid interests value");
+    throw new BadRequestError(t("booking_demo_request.invalid_interests"));
   }
 
   return Array.from(new Set(mapped));
 }
 
 export const bookingDemoRequestService = {
-  async create(payload: CreateBookingDemoRequestInput) {
+  async create(payload: CreateBookingDemoRequestInput, t: Translator) {
     const duplicateRequest = await bookingDemoRequestRepository.findDuplicate(
       payload.email.trim(),
       payload.companyName.trim(),
@@ -68,7 +58,7 @@ export const bookingDemoRequestService = {
     );
 
     if (duplicateRequest) {
-      throw new ConflictError("Demo request already submitted");
+      throw new ConflictError(t("booking_demo_request.duplicate_request"));
     }
 
     const created = await bookingDemoRequestRepository.create({
@@ -77,8 +67,8 @@ export const bookingDemoRequestService = {
       companyName: payload.companyName,
       jobTitle: payload.jobTitle,
       phone: payload.phone,
-      employeeCount: mapEmployeeCount(payload.employeeCount),
-      interests: mapInterests(payload.interests),
+      employeeCount: mapEmployeeCount(payload.employeeCount, t),
+      interests: mapInterests(payload.interests, t),
     });
 
     await bookingDemoRequestMailer.sendNewBookingDetails(created);
