@@ -250,5 +250,12 @@
     "token_not_provided": "No token provided. Please login",
     "invalid_or_expired_token": "Invalid or expired token",
     "invalid_file_type": "Only JPEG, PNG, and PDF files are allowed"
+  },
+  "Department": {
+    "DEPARTMENT_NOT_FOUND": "Department not found",
+    "CIRCULAR_REFERENCE_ERROR": "Cannot set department as its own parent or a descendant",
+    "DEPARTMENT_HAS_EMPLOYEES": "Cannot delete department because it has employees",
+    "MANAGER_NOT_IN_TENANT": "Selected manager does not belong to this company",
+    "DEPARTMENT_HAS_CHILDREN": "Cannot delete department because it has child departments"
   }
 }
