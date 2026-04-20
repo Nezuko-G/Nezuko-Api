@@ -211,5 +211,12 @@
     "token_not_provided": "لم يتم توفير رمز المصادقة. يرجى تسجيل الدخول",
     "invalid_or_expired_token": "الرمز غير صالح أو منتهي الصلاحية",
     "invalid_file_type": "يسمح فقط بملفات JPEG و PNG و PDF"
+  },
+  "Department": {
+    "DEPARTMENT_NOT_FOUND": "القسم غير موجود",
+    "CIRCULAR_REFERENCE_ERROR": "لا يمكن جعل القسم تابعاً لنفسه أو لأحد أحفاده",
+    "DEPARTMENT_HAS_EMPLOYEES": "لا يمكن حذف القسم لأنه يحتوي على موظفين",
+    "MANAGER_NOT_IN_TENANT": "المدير المختار لا ينتمي لهذه الشركة",
+    "DEPARTMENT_HAS_CHILDREN": "لا يمكن حذف القسم لأنه يحتوي على أقسام فرعية تابعة له"
   }
 }
