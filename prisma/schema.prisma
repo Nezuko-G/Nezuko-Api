@@ -44,6 +44,7 @@ model Tenant {
   companySettings    CompanySettings?
   attendanceSettings AttendanceSettings?
   employeeDocuments  EmployeeDocument[]
+  leaveRequests      LeaveRequest[]
 
   @@map("tenants")
 }
@@ -123,6 +124,8 @@ model User {
   department        Department?        @relation("DepartmentMembers", fields: [departmentId], references: [id])
   managedDepartments Department[]     @relation("DepartmentManager")
   employeeDocuments EmployeeDocument[]
+  leaveRequests     LeaveRequest[]     @relation("EmployeeLeaves")
+  reviewedLeaves    LeaveRequest[]     @relation("ReviewedLeaves")
 
   @@unique([tenantId, email])
   @@map("users")
@@ -133,6 +136,13 @@ enum UserRole {
   HR_ADMIN
   MANAGER
   EMPLOYEE
+}
+
+enum LeaveStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  CANCELLED
 }
 
 enum Gender {
@@ -194,6 +204,28 @@ model DemoRequest {
   createdAt     DateTime      @default(now()) @map("created_at")
 
   @@map("demo_requests")
+}
+
+model LeaveRequest {
+  id         String      @id @default(uuid())
+  tenantId   String      @map("tenant_id")
+  userId     String      @map("user_id")
+  startDate  DateTime    @map("start_date") @db.Date
+  endDate    DateTime    @map("end_date") @db.Date
+  reason     String?
+  status     LeaveStatus @default(PENDING)
+  reviewerId String?     @map("reviewer_id")
+  reviewNote String?     @map("review_note")
+  reviewedAt DateTime?   @map("reviewed_at")
+  createdAt  DateTime    @default(now()) @map("created_at")
+  updatedAt  DateTime    @updatedAt @map("updated_at")
+
+  tenant   Tenant @relation(fields: [tenantId], references: [id])
+  user     User   @relation("EmployeeLeaves", fields: [userId], references: [id])
+  reviewer User?  @relation("ReviewedLeaves", fields: [reviewerId], references: [id])
+
+  @@unique([tenantId, userId, startDate, endDate])
+  @@map("leave_requests")
 }
 
 enum EmployeeCount {

@@ -18,7 +18,7 @@ CREATE TABLE "company_settings" (
     "date_format" TEXT NOT NULL DEFAULT 'DD/MM/YYYY',
     "fiscal_year_start" INTEGER NOT NULL DEFAULT 1,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" TIMESTAMP(3) NOT NULL,
+    "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "company_settings_pkey" PRIMARY KEY ("id")
 );
@@ -41,7 +41,7 @@ CREATE TABLE "attendance_settings" (
     "geofence_lng" DOUBLE PRECISION,
     "geofence_radius_m" INTEGER,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" TIMESTAMP(3) NOT NULL,
+    "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "attendance_settings_pkey" PRIMARY KEY ("id")
 );
