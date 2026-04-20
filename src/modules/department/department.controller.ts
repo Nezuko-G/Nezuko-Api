@@ -1,53 +1,56 @@
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { DepartmentService } from './department.service';
 
 const departmentService = new DepartmentService();
 
 export class DepartmentController {
   
-  async create(req: Request, res: Response) {
+  async create(req: Request, res: Response, next: NextFunction) {
     try {
-      if (!req.user) return res.status(401).json({ success: false, message: 'Unauthorized' });
+      if (!req.user) throw new Error('UNAUTHORIZED');
       const department = await departmentService.createDepartment(req.user.tenantId, req.body);
+      
       res.status(201).json({ success: true, data: department });
-    } catch (error: any) {
-      res.status(400).json({ success: false, message: (req as any).t(error.message) });
+    } catch (error) {
+      next(error);
     }
   }
 
-  async getAll(req: Request, res: Response) {
+  async getAll(req: Request, res: Response, next: NextFunction) {
     try {
-      if (!req.user) return res.status(401).send();
-
-      const { page = 1, limit = 10, search = '', parentId } = req.query;
+      if (!req.user) throw new Error('UNAUTHORIZED');
+      const page = Math.max(Number(req.query.page) || 1, 1);
+    const limit = Math.max(Number(req.query.limit) || 10, 1);
+    const search = (req.query.search as string) || '';
+    const parentId = req.query.parentId as string;
 
       const result = await departmentService.getAllDepartments(
-        req.user.tenantId,
-        Number(page),
-        Number(limit),
-        search as string,
-        parentId as string
-      );
+      req.user.tenantId,
+      page,
+      limit,
+      search,
+      parentId
+    );
 
-      const formattedData = result.data.map((d: any) => ({
-        ...d,
-        employeeCount: d._count.users,
-        _count: undefined 
-      }));
+     const formattedData = result.data.map((d: any) => ({
+      ...d,
+      employeeCount: d._count?.users || 0,
+      _count: undefined
+    }));
 
-      res.json({ 
-        success: true, 
-        data: formattedData,
-        meta: result.meta 
-      });
-    } catch (error: any) {
-      res.status(400).json({ success: false, message: (req as any).t(error.message) });
-    }
+    res.json({ 
+      success: true, 
+      data: formattedData,
+      meta: result.meta 
+    });
+  } catch (error) {
+    next(error);
   }
+}
 
-  async getOne(req: Request, res: Response) {
+  async getOne(req: Request, res: Response, next: NextFunction) {
     try {
-      if (!req.user) return res.status(401).send();
+      if (!req.user) throw new Error('UNAUTHORIZED');
       const id = req.params.id as string;
       const dept = await departmentService.getDepartmentById(id, req.user.tenantId);
       
@@ -58,30 +61,32 @@ export class DepartmentController {
       };
 
       res.json({ success: true, data: formattedDept });
-    } catch (error: any) {
-      res.status(404).json({ success: false, message: (req as any).t(error.message) });
+    } catch (error) {
+      next(error);
     }
   }
 
-  async update(req: Request, res: Response) {
+  async update(req: Request, res: Response, next: NextFunction) {
     try {
-      if (!req.user) return res.status(401).send();
+      if (!req.user) throw new Error('UNAUTHORIZED');
       const id = req.params.id as string;
       const department = await departmentService.updateDepartment(id, req.user.tenantId, req.body);
+      
       res.json({ success: true, data: department });
-    } catch (error: any) {
-      res.status(400).json({ success: false, message: (req as any).t(error.message) });
+    } catch (error) {
+      next(error);
     }
   }
 
-  async delete(req: Request, res: Response) {
+  async delete(req: Request, res: Response, next: NextFunction) {
     try {
-      if (!req.user) return res.status(401).send();
+      if (!req.user) throw new Error('UNAUTHORIZED');
       const id = req.params.id as string;
       await departmentService.deleteDepartment(id, req.user.tenantId);
+      
       res.json({ success: true, message: 'Deleted successfully' });
-    } catch (error: any) {
-      res.status(400).json({ success: false, message: (req as any).t(error.message) });
+    } catch (error) {
+      next(error);
     }
   }
 }

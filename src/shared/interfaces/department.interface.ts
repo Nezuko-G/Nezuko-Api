@@ -1,11 +1,11 @@
-export interface CreateDepartmentDTO {
+export interface CreateDepartmentInput {
   name: string;
   description?: string;
   managerId?: string;
   parentId?: string;
 }
 
-export interface UpdateDepartmentDTO {
+export interface UpdateDepartmentInput {
   name?: string;
   description?: string;
   managerId?: string;

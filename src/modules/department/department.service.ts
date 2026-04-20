@@ -1,4 +1,4 @@
-import { CreateDepartmentDTO, UpdateDepartmentDTO } from '../../shared/interfaces/department.interface';
+import { CreateDepartmentInput, UpdateDepartmentInput } from '../../shared/interfaces/department.interface';
 import { DepartmentRepository } from './department.repository';
 import prisma from '@/shared/config/prisma';
 
@@ -6,30 +6,45 @@ const repo = new DepartmentRepository();
 
 export class DepartmentService {
   
-  async createDepartment(tenantId: string, data: CreateDepartmentDTO) {
-    if (data.managerId) {
-      await this.validateManager(tenantId, data.managerId);
+  async createDepartment(tenantId: string, data: CreateDepartmentInput) {
+    try {
+      if (data.managerId) {
+        await this.validateManager(tenantId, data.managerId);
+      }
+      if (data.parentId) {
+        await this.getDepartmentOrThrow(data.parentId, tenantId);
+      }
+      
+      return await repo.create({ ...data, tenantId });
+    } catch (error: any) {
+      if (error.code === 'P2002') {
+        throw new Error('DEPARTMENT_NAME_ALREADY_EXISTS');
+      }
+      throw error;
     }
-    if (data.parentId) {
-      await this.getDepartmentOrThrow(data.parentId, tenantId);
-    }
-    return await repo.create({ ...data, tenantId });
   }
 
-  async updateDepartment(id: string, tenantId: string, data: UpdateDepartmentDTO) {
-    await this.getDepartmentOrThrow(id, tenantId);
+  async updateDepartment(id: string, tenantId: string, data: UpdateDepartmentInput) {
+    try {
+      await this.getDepartmentOrThrow(id, tenantId);
 
-    if (data.managerId) {
-      await this.validateManager(tenantId, data.managerId);
+      if (data.managerId) {
+        await this.validateManager(tenantId, data.managerId);
+      }
+
+      if (data.parentId) {
+        if (data.parentId === id) throw new Error('CIRCULAR_REFERENCE_ERROR');
+        await this.getDepartmentOrThrow(data.parentId, tenantId);
+        await this.checkCircular(id, data.parentId, tenantId); 
+      }
+
+      return await repo.update(id, tenantId, data);
+    } catch (error: any) {
+      if (error.code === 'P2002') {
+        throw new Error('DEPARTMENT_NAME_ALREADY_EXISTS');
+      }
+      throw error;
     }
-
-    if (data.parentId) {
-      if (data.parentId === id) throw new Error('CIRCULAR_REFERENCE_ERROR');
-      await this.getDepartmentOrThrow(data.parentId, tenantId);
-      await this.checkCircular(id, data.parentId, tenantId); 
-    }
-
-    return await repo.update(id, tenantId, data);
   }
 
   async deleteDepartment(id: string, tenantId: string) {
@@ -37,7 +52,6 @@ export class DepartmentService {
 
     const employeeCount = await repo.countEmployeesInDepartment(id, tenantId);
     if (employeeCount > 0) throw new Error('DEPARTMENT_HAS_EMPLOYEES');
-
 
     return await repo.delete(id, tenantId);
   }
