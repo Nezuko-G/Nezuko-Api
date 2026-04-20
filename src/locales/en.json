@@ -34,6 +34,20 @@
     "document_deleted": "Document deleted successfully",
     "document_not_found": "Document not found"
   },
+  "leave_request": {
+    "created_successfully": "Leave request submitted successfully",
+    "reviewed_successfully": "Leave request reviewed successfully",
+    "cancelled_successfully": "Leave request cancelled successfully",
+    "not_found": "Leave request not found",
+    "not_pending": "Only pending leave requests can be changed",
+    "cannot_review_own_request": "You cannot review your own leave request",
+    "overlapping_request": "You already have a leave request that overlaps with the selected dates",
+    "duplicate_request": "You already have a leave request for the same date range",
+    "duplicate_reason_pending": "You already have a pending leave request with the same reason",
+    "duration_exceeded": "Leave request exceeds the maximum allowed duration",
+    "not_owner": "You can only cancel your own leave requests",
+    "not_pending_cancel": "Only pending leave requests can be cancelled"
+  },
   "validation": {
     "body": {
       "empty": "Request body must have at least one field"
@@ -73,11 +87,36 @@
       "invalid": "Please provide a valid department ID"
     },
     "fileName": {
-      "required": "File name is required"
-    },
-    "expiryDate": {
+      "required": "File name is required",
+      "beforeStart": "End date must be the same as or after the start date",
       "invalid": "Please provide a valid expiry date",
       "min": "Expiry date must be in the future"
+    },
+    "leaveRequest": {
+      "startDate": {
+        "required": "Start date is required",
+        "duration": {
+          "invalid": "Leave request duration is invalid"
+        },
+        "invalid": "Please provide a valid start date"
+      },
+      "endDate": {
+        "required": "End date is required",
+        "invalid": "Please provide a valid end date",
+        "beforeStart": "End date must be the same as or after the start date"
+      },
+      "reason": {
+        "max": "Reason must not exceed 500 characters"
+      },
+      "status": {
+        "required": "Review status is required",
+        "invalid": "Status must be either APPROVED or REJECTED"
+      },
+      "reviewNote": {
+        "required": "Review note is required",
+        "min": "Review note must be at least 2 characters",
+        "max": "Review note must not exceed 1000 characters"
+      }
     }
   },
   "company": {
