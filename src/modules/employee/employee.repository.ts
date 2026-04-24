@@ -1,9 +1,11 @@
 import prisma from "@/shared/config/prisma.js";
 import { EmployeeStatus, type Gender } from "@prisma/client";
-import type { CreateEmployeeInput, UpdateEmployeeInput } from "@/shared/interfaces/employee.interface";
+import type {
+  CreateEmployeeInput,
+  UpdateEmployeeInput,
+} from "@/shared/interfaces/employee.interface";
 
 export const employeeRepository = {
-
   async findUserByEmail(tenantId: string, email: string) {
     return prisma.user.findUnique({
       where: { tenantId_email: { tenantId, email } },
@@ -11,7 +13,9 @@ export const employeeRepository = {
     });
   },
 
-  async createEmployee(data: CreateEmployeeInput & { passwordHash: string; employeeCode: string }) {
+  async createEmployee(
+    data: CreateEmployeeInput & { passwordHash: string; employeeCode: string },
+  ) {
     return prisma.user.create({
       data: {
         tenantId: data.tenantId,
@@ -19,6 +23,7 @@ export const employeeRepository = {
         passwordHash: data.passwordHash,
         firstName: data.firstName,
         lastName: data.lastName,
+        salary: data.salary ?? null,
         jobTitle: data.jobTitle ?? null,
         hireDate: data.hireDate ?? null,
         employeeCode: data.employeeCode,
@@ -41,6 +46,7 @@ export const employeeRepository = {
           firstName: true,
           lastName: true,
           email: true,
+          salary: true,
           role: true,
           jobTitle: true,
           employeeCode: true,
@@ -65,7 +71,11 @@ export const employeeRepository = {
     });
   },
 
-  async updateEmployee(tenantId: string, id: string, data: Partial<UpdateEmployeeInput>) {
+  async updateEmployee(
+    tenantId: string,
+    id: string,
+    data: Partial<UpdateEmployeeInput>,
+  ) {
     return prisma.user.update({
       where: { id, tenantId },
       data,
@@ -96,11 +106,13 @@ export const employeeRepository = {
     return prisma.employeeDocument.create({ data });
   },
 
-  async deleteEmployeeDocument(tenantId: string, userId: string, docId: string) {
-    
+  async deleteEmployeeDocument(
+    tenantId: string,
+    userId: string,
+    docId: string,
+  ) {
     return prisma.employeeDocument.delete({
       where: { id: docId, userId, tenantId },
     });
   },
-
 };

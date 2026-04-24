@@ -48,6 +48,31 @@
     "not_owner": "You can only cancel your own leave requests",
     "not_pending_cancel": "Only pending leave requests can be cancelled"
   },
+  "insurance": {
+    "plan_created": "Insurance plan created successfully",
+    "plan_updated": "Insurance plan updated successfully",
+    "plan_deactivated": "Insurance plan deactivated successfully",
+    "enrolled_successfully": "Employee enrolled successfully",
+    "dependent_added": "Dependent added successfully",
+    "dependent_removed": "Dependent removed successfully",
+    "tenant_not_found": "Tenant not found",
+    "plan_not_found": "Insurance plan not found",
+    "plan_name_exists": "An insurance plan with this name already exists",
+    "plan_inactive": "This insurance plan is inactive",
+    "user_not_found": "Employee not found",
+    "salary_invalid": "Employee salary must be greater than zero",
+    "salary_percentage_invalid": "Salary percentage must be greater than 0 and not exceed 1",
+    "max_dependents_invalid": "Maximum dependents must be a positive integer",
+    "max_dependents_too_low": "Maximum dependents cannot be lower than the highest assigned dependent count",
+    "active_enrollment_exists": "Employee already has an active insurance enrollment",
+    "enrollment_not_found": "Insurance enrollment not found",
+    "enrollment_inactive": "Insurance enrollment is inactive",
+    "no_active_enrollment": "No active insurance enrollment found",
+    "dependent_limit_reached": "This enrollment has reached the maximum number of dependents",
+    "dependent_not_found": "Dependent not found",
+    "duplicate_national_id": "A dependent with this national ID already exists for this enrollment",
+    "end_date_before_start": "End date must be the same as or after the start date"
+  },
   "validation": {
     "body": {
       "empty": "Request body must have at least one field"
@@ -83,6 +108,10 @@
       "required": "Phone number is required",
       "invalid": "Please provide a valid phone number in international format, e.g. +201012345678"
     },
+    "salary": {
+      "invalid": "Please provide a valid salary",
+      "min": "Salary must be greater than zero"
+    },
     "departmentId": {
       "invalid": "Please provide a valid department ID"
     },
@@ -116,6 +145,62 @@
         "required": "Review note is required",
         "min": "Review note must be at least 2 characters",
         "max": "Review note must not exceed 1000 characters"
+      }
+    },
+    "insurance": {
+      "name": {
+        "required": "Insurance plan name is required",
+        "min": "Insurance plan name must be at least 2 characters",
+        "max": "Insurance plan name must not exceed 120 characters"
+      },
+      "type": {
+        "required": "Insurance plan type is required",
+        "invalid": "Insurance plan type must be BASIC, STANDARD, or PREMIUM"
+      },
+      "coverageDetails": {
+        "max": "Coverage details must not exceed 2000 characters"
+      },
+      "salaryPercentage": {
+        "required": "Salary percentage is required",
+        "invalid": "Salary percentage must be a valid number",
+        "min": "Salary percentage must be greater than zero",
+        "max": "Salary percentage must not exceed 1"
+      },
+      "maxDependents": {
+        "invalid": "Maximum dependents must be a valid integer",
+        "min": "Maximum dependents must be at least 1"
+      },
+      "userId": {
+        "required": "Employee ID is required",
+        "invalid": "Please provide a valid employee ID"
+      },
+      "startDate": {
+        "required": "Start date is required",
+        "invalid": "Please provide a valid start date"
+      },
+      "endDate": {
+        "invalid": "Please provide a valid end date",
+        "beforeStart": "End date must be the same as or after the start date"
+      },
+      "relation": {
+        "required": "Dependent relation is required",
+        "invalid": "Dependent relation must be SPOUSE, CHILD, or PARENT"
+      },
+      "dateOfBirth": {
+        "required": "Dependent date of birth is required",
+        "invalid": "Please provide a valid date of birth",
+        "past": "Date of birth must be in the past",
+        "minAge": "Dependent must be at least 22 years old",
+        "future": "Date of birth cannot be in the future"
+      },
+      "dependent": {
+        "name": {
+          "required": "Dependent name is required",
+          "max": "Dependent name must not exceed 120 characters"
+        }
+      },
+      "nationalId": {
+        "max": "National ID must not exceed 14 characters"
       }
     }
   },

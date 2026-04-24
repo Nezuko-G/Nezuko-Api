@@ -5,6 +5,7 @@ export interface CreateEmployeeInput {
   firstName: string;
   lastName: string;
   email: string;
+  salary?: number | null;
   jobTitle?: string | null;
   departmentId?: string | null;
   hireDate?: Date | null;
@@ -17,6 +18,7 @@ export interface UpdateEmployeeInput {
   firstName?: string | null;
   lastName?: string | null;
   email?: string;
+  salary?: number | null;
   jobTitle?: string | null;
   hireDate?: Date | null;
   gender?: Gender | null;

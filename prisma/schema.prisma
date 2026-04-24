@@ -41,6 +41,8 @@ model Tenant {
 
   users              User[]
   departments        Department[]
+  insurancePlans     InsurancePlan[]
+  insuranceEnrollments InsuranceEnrollment[]
   companySettings    CompanySettings?
   attendanceSettings AttendanceSettings?
   employeeDocuments  EmployeeDocument[]
@@ -111,6 +113,7 @@ model User {
   employeeCode String?        @map("employee_code")
   status       EmployeeStatus @default(ACTIVE)
   departmentId String?        @map("department_id")
+  salary       Float?         @map("salary")
 
   country String?
   city    String?
@@ -126,6 +129,7 @@ model User {
   employeeDocuments EmployeeDocument[]
   leaveRequests     LeaveRequest[]     @relation("EmployeeLeaves")
   reviewedLeaves    LeaveRequest[]     @relation("ReviewedLeaves")
+  insuranceEnrollments InsuranceEnrollment[]
 
   @@unique([tenantId, email])
   @@map("users")
@@ -154,6 +158,18 @@ enum EmployeeStatus {
   ACTIVE
   INACTIVE
   TERMINATED
+}
+
+enum InsurancePlanType {
+  BASIC
+  STANDARD
+  PREMIUM
+}
+
+enum DependentRelation {
+  SPOUSE
+  CHILD
+  PARENT
 }
 
 model Department {
@@ -226,6 +242,61 @@ model LeaveRequest {
 
   @@unique([tenantId, userId, startDate, endDate])
   @@map("leave_requests")
+}
+
+model InsurancePlan {
+  id              String              @id @default(uuid())
+  tenantId        String              @map("tenant_id")
+  name            String
+  type            InsurancePlanType
+  coverageDetails String?             @map("coverage_details")
+  salaryPercentage Float               @map("salary_percentage")
+  maxDependents   Int                  @default(4) @map("max_dependents")
+  isActive        Boolean              @default(true) @map("is_active")
+  createdAt       DateTime             @default(now()) @map("created_at")
+  updatedAt       DateTime             @updatedAt @map("updated_at")
+
+  tenant      Tenant                 @relation(fields: [tenantId], references: [id])
+  enrollments InsuranceEnrollment[]
+
+  @@unique([tenantId, name])
+  @@map("insurance_plans")
+}
+
+model InsuranceEnrollment {
+  id                String                 @id @default(uuid())
+  tenantId          String                 @map("tenant_id")
+  userId            String                 @map("user_id")
+  planId            String                 @map("plan_id")
+  startDate         DateTime               @map("start_date") @db.Date
+  endDate           DateTime?              @map("end_date") @db.Date
+  monthlyCost       Float                  @map("monthly_cost")
+  salaryAtEnrollment Float                 @map("salary_at_enrollment")
+  isActive          Boolean                @default(true) @map("is_active")
+  createdAt         DateTime               @default(now()) @map("created_at")
+
+  tenant     Tenant                @relation(fields: [tenantId], references: [id])
+  user       User                  @relation(fields: [userId], references: [id])
+  plan       InsurancePlan         @relation(fields: [planId], references: [id])
+  dependents InsuranceDependent[]
+
+  @@unique([tenantId, userId, planId])
+  @@map("insurance_enrollments")
+}
+
+model InsuranceDependent {
+  id           String                @id @default(uuid())
+  enrollmentId String                @map("enrollment_id")
+  name         String
+  relation     DependentRelation
+  dateOfBirth  DateTime              @map("date_of_birth") @db.Date
+  nationalId   String?               @map("national_id")
+  createdAt    DateTime              @default(now()) @map("created_at")
+
+  enrollment InsuranceEnrollment @relation(fields: [enrollmentId], references: [id], onDelete: Cascade)
+
+  @@unique([enrollmentId, nationalId])
+  @@map("insurance_dependents")
 }
 
 enum EmployeeCount {

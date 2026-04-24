@@ -15,10 +15,19 @@ const globalErrorHandler = (
   err: CustomError,
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ): void => {
   const status = err.statusCode || 500;
-  const message = err.message || "Something went wrong";
+  let message = err.message || "Something went wrong";
+
+  // Try to translate the message if it's an i18n key
+  if (req._t && typeof message === "string") {
+    const translated = req._t(message);
+    // Use translated message only if it's different from the input (meaning it was translated)
+    if (translated !== message) {
+      message = translated;
+    }
+  }
 
   const errorResponse: ErrorResponse = {
     status,
