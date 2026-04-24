@@ -18,6 +18,10 @@ export const createEmployeeSchema = Joi.object({
     "any.required": "validation.email.required",
     "string.email": "validation.email.invalid",
   }),
+  salary: Joi.number().positive().optional().messages({
+    "number.base": "validation.salary.invalid",
+    "number.positive": "validation.salary.min",
+  }),
   jobTitle: Joi.string().trim().max(100).optional().messages({
     "string.max": "validation.jobTitle.max",
   }),
@@ -33,9 +37,13 @@ export const createEmployeeSchema = Joi.object({
     "date.format": "validation.dateOfBirth.invalid",
     "date.max": "validation.dateOfBirth.max",
   }),
-  phone: Joi.string().trim().pattern(/^\+?[0-9]{7,15}$/).optional().messages({
-    "string.pattern.base": "validation.phone.invalid",
-  }),
+  phone: Joi.string()
+    .trim()
+    .pattern(/^\+?[0-9]{7,15}$/)
+    .optional()
+    .messages({
+      "string.pattern.base": "validation.phone.invalid",
+    }),
 });
 
 export const updateEmployeeSchema = Joi.object({
@@ -49,6 +57,10 @@ export const updateEmployeeSchema = Joi.object({
   }),
   email: Joi.string().trim().email().optional().messages({
     "string.email": "validation.email.invalid",
+  }),
+  salary: Joi.number().positive().allow(null).optional().messages({
+    "number.base": "validation.salary.invalid",
+    "number.positive": "validation.salary.min",
   }),
   jobTitle: Joi.string().trim().max(100).allow(null).optional().messages({
     "string.max": "validation.jobTitle.max",
@@ -66,20 +78,32 @@ export const updateEmployeeSchema = Joi.object({
     "date.base": "validation.dateOfBirth.invalid",
     "date.max": "validation.dateOfBirth.max",
   }),
-  phone: Joi.string().trim().pattern(/^\+?[0-9]{7,15}$/).allow(null).optional().messages({
-    "string.pattern.base": "validation.phone.invalid",
-  }),
+  phone: Joi.string()
+    .trim()
+    .pattern(/^\+?[0-9]{7,15}$/)
+    .allow(null)
+    .optional()
+    .messages({
+      "string.pattern.base": "validation.phone.invalid",
+    }),
   country: Joi.string().trim().max(100).allow(null).optional(),
   city: Joi.string().trim().max(100).allow(null).optional(),
   address: Joi.string().trim().max(255).allow(null).optional(),
   emergencyName: Joi.string().trim().max(100).allow(null).optional(),
-  emergencyPhone: Joi.string().trim().pattern(/^\+?[0-9]{7,15}$/).allow(null).optional().messages({
-    "string.pattern.base": "validation.phone.invalid",
-  }),
+  emergencyPhone: Joi.string()
+    .trim()
+    .pattern(/^\+?[0-9]{7,15}$/)
+    .allow(null)
+    .optional()
+    .messages({
+      "string.pattern.base": "validation.phone.invalid",
+    }),
   emergencyRelation: Joi.string().trim().max(100).allow(null).optional(),
-}).min(1).messages({
-  "object.min": "validation.body.empty",
-});
+})
+  .min(1)
+  .messages({
+    "object.min": "validation.body.empty",
+  });
 
 export const uploadDocumentSchema = Joi.object({
   fileName: Joi.string().trim().required().messages({
