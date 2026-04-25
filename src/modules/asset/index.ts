@@ -1,0 +1,1 @@
+export {AssetRouter} from "./asset.routes"
