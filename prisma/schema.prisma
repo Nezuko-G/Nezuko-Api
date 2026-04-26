@@ -47,6 +47,7 @@ model Tenant {
   attendanceSettings AttendanceSettings?
   employeeDocuments  EmployeeDocument[]
   leaveRequests      LeaveRequest[]
+  timesheets         Timesheet[]
 
   assets         Asset[]
   assetCustodies AssetCustody[]
@@ -135,6 +136,8 @@ model User {
   employeeDocuments EmployeeDocument[]
   leaveRequests     LeaveRequest[]     @relation("EmployeeLeaves")
   reviewedLeaves    LeaveRequest[]     @relation("ReviewedLeaves")
+  timesheets        Timesheet[]        @relation("EmployeeTimesheets")
+  submittedTimesheets Timesheet[]      @relation("SubmittedTimesheets")
   insuranceEnrollments InsuranceEnrollment[]
 
   custodies         AssetCustody[] @relation("AssignedCustodies")
@@ -160,6 +163,13 @@ enum LeaveStatus {
   APPROVED
   REJECTED
   CANCELLED
+}
+
+enum TimesheetStatus {
+  DRAFT
+  SUBMITTED
+  APPROVED
+  REJECTED
 }
 
 enum Gender {
@@ -255,6 +265,29 @@ model LeaveRequest {
 
   @@unique([tenantId, userId, startDate, endDate])
   @@map("leave_requests")
+}
+
+model Timesheet {
+  id            String          @id @default(uuid())
+  tenantId      String          @map("tenant_id")
+  userId        String          @map("user_id")
+  date          DateTime        @db.Date
+  checkIn       DateTime?       @map("check_in")
+  checkOut      DateTime?       @map("check_out")
+  totalHours    Float?          @map("total_hours")
+  overtimeHours Float?          @map("overtime_hours")
+  status        TimesheetStatus @default(DRAFT)
+  notes         String?
+  submittedBy   String?         @map("submitted_by")
+  createdAt     DateTime        @default(now()) @map("created_at")
+  updatedAt     DateTime        @updatedAt @map("updated_at")
+
+  tenant    Tenant @relation(fields: [tenantId], references: [id])
+  user      User   @relation("EmployeeTimesheets", fields: [userId], references: [id])
+  submitter User?  @relation("SubmittedTimesheets", fields: [submittedBy], references: [id])
+
+  @@unique([tenantId, userId, date])
+  @@map("timesheets")
 }
 
 model InsurancePlan {
