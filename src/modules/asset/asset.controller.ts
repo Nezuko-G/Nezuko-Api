@@ -30,7 +30,7 @@ export const assetController = {
     try {
       const id = req.params.id as string;
       const t = (req as any).t;
-      
+
       const data = await assetService.getAssetById(req.user!.tenantId, id, t);
       res.json({ success: true, data });
     } catch (error) {

@@ -43,8 +43,8 @@ export const assetService = {
 
   async getAssets(tenantId: string, page: number, limit: number, status?: AssetStatus, t?: any) {
     if (status && !Object.values(AssetStatus).includes(status)) {
-       const msg = typeof t === 'function' ? t("asset.invalid_status") : "Invalid status provided";
-       throw new ConflictError(msg);
+      const msg = typeof t === 'function' ? t("asset.invalid_status") : "Invalid status provided";
+      throw new ConflictError(msg);
     }
 
     const { assets, total } = await assetRepository.getAssets(tenantId, page, limit, status);
@@ -66,11 +66,11 @@ export const assetService = {
       throw new NotFoundError(msg);
     }
     return asset;
-  } ,
+  },
 
   async updateAsset(tenantId: string, id: string, input: Partial<UpdateAssetInput>, t: any) {
     await this.getAssetById(tenantId, id, t);
-    
+
     if (input.purchaseDate) {
       input.purchaseDate = new Date(input.purchaseDate);
     }
@@ -80,7 +80,7 @@ export const assetService = {
 
   async assignAsset(input: AssignAssetInput, t: any) {
     const asset = await this.getAssetById(input.tenantId, input.assetId, t);
-    
+
     if (asset.status !== AssetStatus.AVAILABLE) {
       const msg = typeof t === 'function' ? t("asset.not_available") : "Asset not available";
       throw new ConflictError(msg);
@@ -110,8 +110,8 @@ export const assetService = {
       result = await assetRepository.returnAsset(input, activeCustody.id);
     } catch (error: any) {
       if (error.message === "RACE_CONDITION") {
-         const msg = typeof t === 'function' ? t("asset.state_changed") : "Asset state changed";
-         throw new ConflictError(msg);
+        const msg = typeof t === 'function' ? t("asset.state_changed") : "Asset state changed";
+        throw new ConflictError(msg);
       }
       throw error;
     }
@@ -171,7 +171,7 @@ export const assetService = {
       const elapsedMs = currentDate.getTime() - new Date(asset.purchaseDate!).getTime();
       const elapsedYears = Math.max(0, elapsedMs / (1000 * 60 * 60 * 24 * 365.25));
       const cost = asset.purchaseCost!;
-      
+
       const depreciationValue = (cost / 5) * elapsedYears;
       const bookValue = Math.max(0, cost - depreciationValue);
 
