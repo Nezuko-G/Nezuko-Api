@@ -1,1 +1,1 @@
-export {AssetRouter} from "./asset.routes"
+export { AssetRouter } from "./asset.routes"

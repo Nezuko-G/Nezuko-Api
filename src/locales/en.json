@@ -73,7 +73,81 @@
     "duplicate_national_id": "A dependent with this national ID already exists for this enrollment",
     "end_date_before_start": "End date must be the same as or after the start date"
   },
+  "project": {
+    "not_found": "Project not found.",
+    "created_successfully": "Project created successfully.",
+    "updated_successfully": "Project updated successfully.",
+    "already_cancelled": "Project is already cancelled.",
+    "name_already_exists": "A project with this name already exists."
+  },
+  "task": {
+    "not_found": "Task not found.",
+    "created_successfully": "Task created successfully.",
+    "updated_successfully": "Task updated successfully.",
+    "status_updated_successfully": "Task status updated successfully.",
+    "subtask_created_successfully": "Sub-task created successfully.",
+    "status_change_not_allowed": "You are not allowed to change this task's status. Only the assignee or a manager can do that.",
+    "open_subtasks_exist": "Cannot complete this task while it still has open sub-tasks. Please complete all sub-tasks first.",
+    "subtask_nesting_not_allowed": "Sub-tasks cannot have their own sub-tasks. Only one level of nesting is allowed."
+  },
   "validation": {
+    "project": {
+      "name": {
+        "required": "Project name is required.",
+        "min": "Project name must be at least 2 characters.",
+        "max": "Project name must not exceed 100 characters."
+      },
+      "description": {
+        "max": "Description must not exceed 1000 characters."
+      },
+      "status": {
+        "invalid": "Status must be one of: PLANNING, ACTIVE, ON_HOLD, COMPLETED, CANCELLED."
+      },
+      "ownerId": {
+        "invalid": "Owner ID must be a valid UUID."
+      },
+      "startDate": {
+        "invalid": "Start date must be a valid ISO date."
+      },
+      "dueDate": {
+        "invalid": "Due date must be a valid ISO date.",
+        "before_start": "Due date cannot be before the start date."
+      }
+    },
+    "task": {
+      "title": {
+        "required": "Task title is required.",
+        "min": "Task title must be at least 2 characters.",
+        "max": "Task title must not exceed 200 characters."
+      },
+      "description": {
+        "max": "Description must not exceed 2000 characters."
+      },
+      "status": {
+        "required": "Task status is required.",
+        "invalid": "Status must be one of: TODO, IN_PROGRESS, IN_REVIEW, DONE, BLOCKED."
+      },
+      "priority": {
+        "invalid": "Priority must be one of: LOW, MEDIUM, HIGH, URGENT."
+      },
+      "projectId": {
+        "invalid": "Project ID must be a valid UUID."
+      },
+      "assigneeId": {
+        "invalid": "Assignee ID must be a valid UUID."
+      },
+      "dueDate": {
+        "invalid": "Due date must be a valid ISO date."
+      },
+      "estimatedHours": {
+        "invalid": "Estimated hours must be a number.",
+        "positive": "Estimated hours must be greater than 0."
+      },
+      "actualHours": {
+        "invalid": "Actual hours must be a number.",
+        "min": "Actual hours cannot be negative."
+      }
+    },
     "body": {
       "empty": "Request body must have at least one field"
     },
@@ -355,5 +429,4 @@
     "active_custody_exists": "Cannot retire this asset because it is currently assigned to an employee. Please return it first.",
     "race_condition": "A race condition occurred while processing this asset. Please try again."
   }
-
 }
