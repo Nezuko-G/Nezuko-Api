@@ -48,6 +48,19 @@
     "not_owner": "You can only cancel your own leave requests",
     "not_pending_cancel": "Only pending leave requests can be cancelled"
   },
+  "timesheet": {
+    "created_successfully": "Timesheet submitted successfully",
+    "updated_successfully": "Timesheet updated successfully",
+    "status_updated_successfully": "Timesheet status updated successfully",
+    "not_found": "Timesheet not found",
+    "duplicate_for_day": "A timesheet already exists for this employee on the selected date",
+    "future_date_not_allowed": "Future dates are not allowed for timesheets",
+    "submitted_requires_check_in_out": "Check-in and check-out are required for submitted timesheets",
+    "edit_locked": "Only draft or rejected timesheets can be edited",
+    "status_requires_submitted": "Only submitted timesheets can be approved or rejected",
+    "employee_not_found": "Employee not found",
+    "only_employee_allowed": "Timesheets can only be submitted for employees"
+  },
   "insurance": {
     "plan_created": "Insurance plan created successfully",
     "plan_updated": "Insurance plan updated successfully",
@@ -219,6 +232,41 @@
         "required": "Review note is required",
         "min": "Review note must be at least 2 characters",
         "max": "Review note must not exceed 1000 characters"
+      }
+    },
+    "timesheet": {
+      "entries": {
+        "required": "Entries are required",
+        "min": "At least one timesheet entry is required"
+      },
+      "userId": {
+        "required": "Employee ID is required",
+        "invalid": "Employee ID must be a valid UUID"
+      },
+      "date": {
+        "required": "Date is required",
+        "invalid": "Date must be a valid ISO date"
+      },
+      "checkIn": {
+        "invalid": "Check-in must be a valid ISO date-time"
+      },
+      "checkOut": {
+        "invalid": "Check-out must be a valid ISO date-time",
+        "afterCheckIn": "Check-out must be after check-in"
+      },
+      "notes": {
+        "max": "Notes must not exceed 1000 characters"
+      },
+      "status": {
+        "required": "Status is required",
+        "invalid": "Status must be one of: DRAFT, SUBMITTED, APPROVED, REJECTED",
+        "update_invalid": "Status must be either DRAFT or SUBMITTED when editing a timesheet",
+        "review_invalid": "Status must be either APPROVED or REJECTED"
+      },
+      "dateRange": {
+        "invalid": "End date must be the same as or after the start date",
+        "start_required": "Start date is required",
+        "end_required": "End date is required"
       }
     },
     "insurance": {
