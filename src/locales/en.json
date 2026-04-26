@@ -342,5 +342,18 @@
     "DEPARTMENT_HAS_EMPLOYEES": "Cannot delete department because it has employees",
     "MANAGER_NOT_IN_TENANT": "Selected manager does not belong to this company",
     "DEPARTMENT_HAS_CHILDREN": "Cannot delete department because it has child departments"
+  },
+  "asset": {
+    "serial_exists": "An asset with this serial number already exists in your company.",
+    "invalid_status": "Invalid asset status provided.",
+    "not_found": "Asset not found.",
+    "not_available": "This asset is not available. It might have been assigned to someone else just now.",
+    "no_active_custody": "This asset is not currently assigned to anyone.",
+    "state_changed": "The asset state changed during processing. Please refresh the page and try again.",
+    "condition_degraded": "Warning: The asset was returned in a worse condition than when it was assigned.",
+    "already_assigned_to_user": "This asset is already assigned to this specific employee.",
+    "active_custody_exists": "Cannot retire this asset because it is currently assigned to an employee. Please return it first.",
+    "race_condition": "A race condition occurred while processing this asset. Please try again."
   }
+
 }
