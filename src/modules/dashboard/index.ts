@@ -5,8 +5,9 @@ import { InsuranceRouter } from "../insurance";
 import { CompanyRouter } from "../company";
 import { EmployeeRouter } from "../employee";
 import { LeaveRequestRouter } from "../leave-request";
-import { DepartmentRouter } from '../department';
+import { DepartmentRouter } from "../department";
 import { ProjectRouter } from "../project";
+import { TimesheetRouter } from "../timesheet";
 // import { AssetRouter } from "../asset";
 
 const router = Router();
@@ -20,6 +21,6 @@ router.use("/leave-requests", LeaveRequestRouter);
 router.use("/department", DepartmentRouter);
 // router.use("/asset", AssetRouter);
 router.use("/project", ProjectRouter);
-
+router.use("/timesheets", TimesheetRouter);
 
 export { router as GlobalRouter };
