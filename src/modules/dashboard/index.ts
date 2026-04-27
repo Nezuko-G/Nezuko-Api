@@ -8,7 +8,8 @@ import { LeaveRequestRouter } from "../leave-request";
 import { DepartmentRouter } from "../department";
 import { ProjectRouter } from "../project";
 import { TimesheetRouter } from "../timesheet";
-// import { AssetRouter } from "../asset";
+import { PayrollRouter } from "../payroll";
+import { AssetRouter } from "../asset";
 
 const router = Router();
 
@@ -19,8 +20,10 @@ router.use("/company", CompanyRouter);
 router.use("/employee", EmployeeRouter);
 router.use("/leave-requests", LeaveRequestRouter);
 router.use("/department", DepartmentRouter);
-// router.use("/asset", AssetRouter);
+router.use("/asset", AssetRouter);
 router.use("/project", ProjectRouter);
 router.use("/timesheets", TimesheetRouter);
+router.use("/payrolls", PayrollRouter);
+
 
 export { router as GlobalRouter };

@@ -39,21 +39,22 @@ model Tenant {
   createdAt     DateTime @default(now()) @map("created_at")
   updatedAt     DateTime @updatedAt @map("updated_at")
 
-  users              User[]
-  departments        Department[]
-  insurancePlans     InsurancePlan[]
+  users                User[]
+  departments          Department[]
+  insurancePlans       InsurancePlan[]
   insuranceEnrollments InsuranceEnrollment[]
-  companySettings    CompanySettings?
-  attendanceSettings AttendanceSettings?
-  employeeDocuments  EmployeeDocument[]
-  leaveRequests      LeaveRequest[]
-  timesheets         Timesheet[]
-
-  assets         Asset[]
-  assetCustodies AssetCustody[]
-
-  projects Project[]
-  tasks    Task[]
+  companySettings      CompanySettings?
+  attendanceSettings   AttendanceSettings?
+  employeeDocuments    EmployeeDocument[]
+  leaveRequests        LeaveRequest[]
+  timesheets           Timesheet[]
+  assets               Asset[]
+  assetCustodies       AssetCustody[]
+  projects             Project[]
+  tasks                Task[]
+  payrollRuns          PayrollRun[]
+  payrollEntries       PayrollEntry[]
+  incentives           Incentive[]
 
   @@map("tenants")
 }
@@ -99,14 +100,14 @@ enum Plan {
 }
 
 model User {
-  id           String         @id @default(uuid())
-  tenantId     String         @map("tenant_id")
+  id           String   @id @default(uuid())
+  tenantId     String   @map("tenant_id")
   email        String
-  passwordHash String         @map("password_hash")
-  role         UserRole       @default(EMPLOYEE)
-  isActive     Boolean        @default(true) @map("is_active")
-  createdAt    DateTime       @default(now()) @map("created_at")
-  updatedAt    DateTime       @updatedAt @map("updated_at")
+  passwordHash String   @map("password_hash")
+  role         UserRole @default(EMPLOYEE)
+  isActive     Boolean  @default(true) @map("is_active")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
 
   // Personal Info
   firstName   String?   @map("first_name")
@@ -130,22 +131,25 @@ model User {
   emergencyPhone    String? @map("emergency_phone")
   emergencyRelation String? @map("emergency_relation")
 
-  tenant            Tenant             @relation(fields: [tenantId], references: [id])
-  department        Department?        @relation("DepartmentMembers", fields: [departmentId], references: [id])
-  managedDepartments Department[]     @relation("DepartmentManager")
-  employeeDocuments EmployeeDocument[]
-  leaveRequests     LeaveRequest[]     @relation("EmployeeLeaves")
-  reviewedLeaves    LeaveRequest[]     @relation("ReviewedLeaves")
-  timesheets        Timesheet[]        @relation("EmployeeTimesheets")
-  submittedTimesheets Timesheet[]      @relation("SubmittedTimesheets")
+  tenant               Tenant                @relation(fields: [tenantId], references: [id])
+  department           Department?           @relation("DepartmentMembers", fields: [departmentId], references: [id])
+  managedDepartments   Department[]          @relation("DepartmentManager")
+  employeeDocuments    EmployeeDocument[]
+  leaveRequests        LeaveRequest[]        @relation("EmployeeLeaves")
+  reviewedLeaves       LeaveRequest[]        @relation("ReviewedLeaves")
+  timesheets           Timesheet[]           @relation("EmployeeTimesheets")
+  submittedTimesheets  Timesheet[]           @relation("SubmittedTimesheets")
   insuranceEnrollments InsuranceEnrollment[]
-
-  custodies         AssetCustody[] @relation("AssignedCustodies")
-  assignedCustodies AssetCustody[] @relation("CustodiesAssigned")
-
-  ownedProjects Project[] @relation("OwnedProjects")
-  assignedTasks Task[]    @relation("AssignedTasks")
-  createdTasks  Task[]    @relation("CreatedTasks")
+  custodies            AssetCustody[]        @relation("AssignedCustodies")
+  assignedCustodies    AssetCustody[]        @relation("CustodiesAssigned")
+  ownedProjects        Project[]             @relation("OwnedProjects")
+  assignedTasks        Task[]                @relation("AssignedTasks")
+  createdTasks         Task[]                @relation("CreatedTasks")
+  payrollEntries       PayrollEntry[]        @relation("PayrollEntries")
+  incentives           Incentive[]           @relation("EmployeeIncentives")
+  createdIncentives    Incentive[]           @relation("CreatedIncentives")
+  createdPayrolls      PayrollRun[]          @relation("CreatedPayrolls")
+  approvedPayrolls     PayrollRun[]          @relation("ApprovedPayrolls")
 
   @@unique([tenantId, email])
   @@map("users")
@@ -195,6 +199,20 @@ enum DependentRelation {
   PARENT
 }
 
+enum PayrollStatus {
+  DRAFT
+  APPROVED
+  PAID
+}
+
+enum IncentiveType {
+  BONUS
+  COMMISSION
+  OVERTIME
+  DEDUCTION
+  OTHER
+}
+
 model Department {
   id          String   @id @default(uuid())
   tenantId    String   @map("tenant_id")
@@ -205,10 +223,10 @@ model Department {
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
 
-  tenant   Tenant      @relation(fields: [tenantId], references: [id])
-  users    User[]      @relation("DepartmentMembers")
-  manager  User?       @relation("DepartmentManager", fields: [managerId], references: [id])
-  parent   Department? @relation("SubDepartments", fields: [parentId], references: [id])
+  tenant   Tenant       @relation(fields: [tenantId], references: [id])
+  users    User[]       @relation("DepartmentMembers")
+  manager  User?        @relation("DepartmentManager", fields: [managerId], references: [id])
+  parent   Department?  @relation("SubDepartments", fields: [parentId], references: [id])
   children Department[] @relation("SubDepartments")
 
   @@unique([tenantId, name])
@@ -291,18 +309,18 @@ model Timesheet {
 }
 
 model InsurancePlan {
-  id              String              @id @default(uuid())
-  tenantId        String              @map("tenant_id")
-  name            String
-  type            InsurancePlanType
-  coverageDetails String?             @map("coverage_details")
-  salaryPercentage Float               @map("salary_percentage")
-  maxDependents   Int                  @default(4) @map("max_dependents")
-  isActive        Boolean              @default(true) @map("is_active")
-  createdAt       DateTime             @default(now()) @map("created_at")
-  updatedAt       DateTime             @updatedAt @map("updated_at")
+  id               String            @id @default(uuid())
+  tenantId         String            @map("tenant_id")
+  name             String
+  type             InsurancePlanType
+  coverageDetails  String?           @map("coverage_details")
+  salaryPercentage Float             @map("salary_percentage")
+  maxDependents    Int               @default(4) @map("max_dependents")
+  isActive         Boolean           @default(true) @map("is_active")
+  createdAt        DateTime          @default(now()) @map("created_at")
+  updatedAt        DateTime          @updatedAt @map("updated_at")
 
-  tenant      Tenant                 @relation(fields: [tenantId], references: [id])
+  tenant      Tenant                @relation(fields: [tenantId], references: [id])
   enrollments InsuranceEnrollment[]
 
   @@unique([tenantId, name])
@@ -310,20 +328,20 @@ model InsurancePlan {
 }
 
 model InsuranceEnrollment {
-  id                String                 @id @default(uuid())
-  tenantId          String                 @map("tenant_id")
-  userId            String                 @map("user_id")
-  planId            String                 @map("plan_id")
-  startDate         DateTime               @map("start_date") @db.Date
-  endDate           DateTime?              @map("end_date") @db.Date
-  monthlyCost       Float                  @map("monthly_cost")
-  salaryAtEnrollment Float                 @map("salary_at_enrollment")
-  isActive          Boolean                @default(true) @map("is_active")
-  createdAt         DateTime               @default(now()) @map("created_at")
+  id                 String    @id @default(uuid())
+  tenantId           String    @map("tenant_id")
+  userId             String    @map("user_id")
+  planId             String    @map("plan_id")
+  startDate          DateTime  @map("start_date") @db.Date
+  endDate            DateTime? @map("end_date") @db.Date
+  monthlyCost        Float     @map("monthly_cost")
+  salaryAtEnrollment Float     @map("salary_at_enrollment")
+  isActive           Boolean   @default(true) @map("is_active")
+  createdAt          DateTime  @default(now()) @map("created_at")
 
-  tenant     Tenant                @relation(fields: [tenantId], references: [id])
-  user       User                  @relation(fields: [userId], references: [id])
-  plan       InsurancePlan         @relation(fields: [planId], references: [id])
+  tenant     Tenant               @relation(fields: [tenantId], references: [id])
+  user       User                 @relation(fields: [userId], references: [id])
+  plan       InsurancePlan        @relation(fields: [planId], references: [id])
   dependents InsuranceDependent[]
 
   @@unique([tenantId, userId, planId])
@@ -331,13 +349,13 @@ model InsuranceEnrollment {
 }
 
 model InsuranceDependent {
-  id           String                @id @default(uuid())
-  enrollmentId String                @map("enrollment_id")
+  id           String            @id @default(uuid())
+  enrollmentId String            @map("enrollment_id")
   name         String
   relation     DependentRelation
-  dateOfBirth  DateTime              @map("date_of_birth") @db.Date
-  nationalId   String?               @map("national_id")
-  createdAt    DateTime              @default(now()) @map("created_at")
+  dateOfBirth  DateTime          @map("date_of_birth") @db.Date
+  nationalId   String?           @map("national_id")
+  createdAt    DateTime          @default(now()) @map("created_at")
 
   enrollment InsuranceEnrollment @relation(fields: [enrollmentId], references: [id], onDelete: Cascade)
 
@@ -359,8 +377,7 @@ enum Interest {
   SPEND
 }
 
-
-//Assets 
+// Assets
 
 enum AssetStatus {
   AVAILABLE
@@ -368,63 +385,58 @@ enum AssetStatus {
   UNDER_MAINTENANCE
   RETIRED
 }
-enum AssetCondition {
-NEW
-GOOD
-FAIR
-DAMAGED
-}
 
+enum AssetCondition {
+  NEW
+  GOOD
+  FAIR
+  DAMAGED
+}
 
 model Asset {
-id           String         @id @default(uuid())
-tenantId     String         @map("tenant_id")
-name         String
-category     String
-serialNumber String?        @map("serial_number")
-brand        String?
-model        String?
-purchaseDate DateTime?      @map("purchase_date") @db.Date
-purchaseCost Float?         @map("purchase_cost")
-status       AssetStatus    @default(AVAILABLE)
-condition    AssetCondition @default(NEW)
-notes        String?
-createdAt    DateTime       @default(now()) @map("created_at")
-updatedAt    DateTime       @updatedAt @map("updated_at")
+  id           String         @id @default(uuid())
+  tenantId     String         @map("tenant_id")
+  name         String
+  category     String
+  serialNumber String?        @map("serial_number")
+  brand        String?
+  model        String?
+  purchaseDate DateTime?      @map("purchase_date") @db.Date
+  purchaseCost Float?         @map("purchase_cost")
+  status       AssetStatus    @default(AVAILABLE)
+  condition    AssetCondition @default(NEW)
+  notes        String?
+  createdAt    DateTime       @default(now()) @map("created_at")
+  updatedAt    DateTime       @updatedAt @map("updated_at")
 
+  tenant    Tenant         @relation(fields: [tenantId], references: [id])
+  custodies AssetCustody[]
 
-tenant    Tenant         @relation(fields: [tenantId], references: [id])
-custodies AssetCustody[]
-
-
-@@unique([tenantId, serialNumber])
-@@map("assets")
+  @@unique([tenantId, serialNumber])
+  @@map("assets")
 }
-
 
 model AssetCustody {
-id           String          @id @default(uuid())
-tenantId     String          @map("tenant_id")
-assetId      String          @map("asset_id")
-userId       String          @map("user_id")
-assignedAt   DateTime        @default(now()) @map("assigned_at")
-returnedAt   DateTime?       @map("returned_at")
-conditionOut AssetCondition  @map("condition_out")
-conditionIn  AssetCondition? @map("condition_in")
-notes        String?
-assignedBy   String          @map("assigned_by")
+  id           String          @id @default(uuid())
+  tenantId     String          @map("tenant_id")
+  assetId      String          @map("asset_id")
+  userId       String          @map("user_id")
+  assignedAt   DateTime        @default(now()) @map("assigned_at")
+  returnedAt   DateTime?       @map("returned_at")
+  conditionOut AssetCondition  @map("condition_out")
+  conditionIn  AssetCondition? @map("condition_in")
+  notes        String?
+  assignedBy   String          @map("assigned_by")
 
+  tenant         Tenant @relation(fields: [tenantId], references: [id])
+  asset          Asset  @relation(fields: [assetId], references: [id])
+  user           User   @relation("AssignedCustodies", fields: [userId], references: [id])
+  assignedByUser User   @relation("CustodiesAssigned", fields: [assignedBy], references: [id])
 
-tenant         Tenant @relation(fields: [tenantId], references: [id])
-asset          Asset  @relation(fields: [assetId], references: [id])
-user           User   @relation("AssignedCustodies", fields: [userId], references: [id])
-assignedByUser User   @relation("CustodiesAssigned", fields: [assignedBy], references: [id])
-
-
-@@map("asset_custodies")
+  @@map("asset_custodies")
 }
 
-//Projects 
+// Projects
 
 enum ProjectStatus {
   PLANNING
@@ -433,73 +445,132 @@ enum ProjectStatus {
   COMPLETED
   CANCELLED
 }
-enum TaskStatus {
-TODO
-IN_PROGRESS
-IN_REVIEW
-DONE
-BLOCKED
-}
 
+enum TaskStatus {
+  TODO
+  IN_PROGRESS
+  IN_REVIEW
+  DONE
+  BLOCKED
+}
 
 enum TaskPriority {
-LOW
-MEDIUM
-HIGH
-URGENT
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
 }
-
 
 model Project {
-id          String        @id @default(uuid())
-tenantId    String        @map("tenant_id")
-name        String
-description String?
-status      ProjectStatus @default(PLANNING)
-ownerId     String        @map("owner_id")
-startDate   DateTime?     @map("start_date") @db.Date
-dueDate     DateTime?     @map("due_date") @db.Date
-createdAt   DateTime      @default(now()) @map("created_at")
-updatedAt   DateTime      @updatedAt @map("updated_at")
+  id          String        @id @default(uuid())
+  tenantId    String        @map("tenant_id")
+  name        String
+  description String?
+  status      ProjectStatus @default(PLANNING)
+  ownerId     String        @map("owner_id")
+  startDate   DateTime?     @map("start_date") @db.Date
+  dueDate     DateTime?     @map("due_date") @db.Date
+  createdAt   DateTime      @default(now()) @map("created_at")
+  updatedAt   DateTime      @updatedAt @map("updated_at")
 
+  tenant Tenant @relation(fields: [tenantId], references: [id])
+  owner  User   @relation("OwnedProjects", fields: [ownerId], references: [id])
+  tasks  Task[]
 
-tenant Tenant @relation(fields: [tenantId], references: [id])
-owner  User   @relation("OwnedProjects", fields: [ownerId], references: [id])
-tasks  Task[]
-
-
-@@map("projects")
+  @@map("projects")
 }
-
 
 model Task {
-id             String       @id @default(uuid())
-tenantId       String       @map("tenant_id")
-projectId      String?      @map("project_id")
-title          String
-description    String?
-status         TaskStatus   @default(TODO)
-priority       TaskPriority @default(MEDIUM)
-assigneeId     String?      @map("assignee_id")
-createdById    String       @map("created_by_id")
-dueDate        DateTime?    @map("due_date") @db.Date
-completedAt    DateTime?    @map("completed_at")
-estimatedHours Float?       @map("estimated_hours")
-actualHours    Float?       @map("actual_hours")
-parentTaskId   String?      @map("parent_task_id")
-createdAt      DateTime     @default(now()) @map("created_at")
-updatedAt      DateTime     @updatedAt @map("updated_at")
+  id             String       @id @default(uuid())
+  tenantId       String       @map("tenant_id")
+  projectId      String?      @map("project_id")
+  title          String
+  description    String?
+  status         TaskStatus   @default(TODO)
+  priority       TaskPriority @default(MEDIUM)
+  assigneeId     String?      @map("assignee_id")
+  createdById    String       @map("created_by_id")
+  dueDate        DateTime?    @map("due_date") @db.Date
+  completedAt    DateTime?    @map("completed_at")
+  estimatedHours Float?       @map("estimated_hours")
+  actualHours    Float?       @map("actual_hours")
+  parentTaskId   String?      @map("parent_task_id")
+  createdAt      DateTime     @default(now()) @map("created_at")
+  updatedAt      DateTime     @updatedAt @map("updated_at")
 
+  tenant     Tenant   @relation(fields: [tenantId], references: [id])
+  project    Project? @relation(fields: [projectId], references: [id])
+  assignee   User?    @relation("AssignedTasks", fields: [assigneeId], references: [id])
+  createdBy  User     @relation("CreatedTasks", fields: [createdById], references: [id])
+  parentTask Task?    @relation("SubTasks", fields: [parentTaskId], references: [id])
+  subTasks   Task[]   @relation("SubTasks")
 
-tenant     Tenant   @relation(fields: [tenantId], references: [id])
-project    Project? @relation(fields: [projectId], references: [id])
-assignee   User?    @relation("AssignedTasks", fields: [assigneeId], references: [id])
-createdBy  User     @relation("CreatedTasks", fields: [createdById], references: [id])
-parentTask Task?    @relation("SubTasks", fields: [parentTaskId], references: [id])
-subTasks   Task[]   @relation("SubTasks")
-
-
-@@map("tasks")
+  @@map("tasks")
 }
 
+// Payroll
 
+model PayrollRun {
+  id         String        @id @default(uuid())
+  tenantId   String        @map("tenant_id")
+  month      Int
+  year       Int
+  status     PayrollStatus @default(DRAFT)
+  createdBy  String        @map("created_by")
+  approvedBy String?       @map("approved_by")
+  approvedAt DateTime?     @map("approved_at")
+  paidAt     DateTime?     @map("paid_at")
+  createdAt  DateTime      @default(now()) @map("created_at")
+  updatedAt  DateTime      @updatedAt @map("updated_at")
+
+  tenant   Tenant         @relation(fields: [tenantId], references: [id])
+  creator  User           @relation("CreatedPayrolls", fields: [createdBy], references: [id])
+  approver User?          @relation("ApprovedPayrolls", fields: [approvedBy], references: [id])
+  entries  PayrollEntry[]
+
+  @@unique([tenantId, month, year])
+  @@map("payroll_runs")
+}
+
+model PayrollEntry {
+  id              String   @id @default(uuid())
+  payrollRunId    String   @map("payroll_run_id")
+  tenantId        String   @map("tenant_id")
+  userId          String   @map("user_id")
+  baseSalary      Float    @map("base_salary")
+  overtimePay     Float    @default(0) @map("overtime_pay")
+  totalIncentives Float    @default(0) @map("total_incentives")
+  totalDeductions Float    @default(0) @map("total_deductions")
+  insuranceAmount Float    @default(0) @map("insurance_amount")
+  netSalary       Float    @map("net_salary")
+  overtimeHours   Float    @default(0) @map("overtime_hours")
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  payrollRun PayrollRun  @relation(fields: [payrollRunId], references: [id], onDelete: Cascade)
+  tenant     Tenant      @relation(fields: [tenantId], references: [id])
+  user       User        @relation("PayrollEntries", fields: [userId], references: [id])
+  incentives Incentive[]
+
+  @@unique([payrollRunId, userId])
+  @@map("payroll_entries")
+}
+
+model Incentive {
+  id             String        @id @default(uuid())
+  tenantId       String        @map("tenant_id")
+  userId         String        @map("user_id")
+  payrollEntryId String?       @map("payroll_entry_id")
+  type           IncentiveType
+  amount         Float
+  description    String?
+  effectiveDate  DateTime      @map("effective_date") @db.Date
+  createdBy      String        @map("created_by")
+  createdAt      DateTime      @default(now()) @map("created_at")
+
+  tenant       Tenant        @relation(fields: [tenantId], references: [id])
+  user         User          @relation("EmployeeIncentives", fields: [userId], references: [id])
+  payrollEntry PayrollEntry? @relation(fields: [payrollEntryId], references: [id])
+  creator      User          @relation("CreatedIncentives", fields: [createdBy], references: [id])
+
+  @@map("incentives")
+}

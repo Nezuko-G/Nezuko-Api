@@ -103,7 +103,57 @@
     "open_subtasks_exist": "Cannot complete this task while it still has open sub-tasks. Please complete all sub-tasks first.",
     "subtask_nesting_not_allowed": "Sub-tasks cannot have their own sub-tasks. Only one level of nesting is allowed."
   },
+  "payroll": {
+    "run_not_found": "Payroll run not found",
+    "run_already_exists": "A payroll run already exists for this month and year",
+    "run_not_draft": "Only draft payroll runs can be approved",
+    "run_not_approved": "Only approved payroll runs can be marked as paid",
+    "run_created_successfully": "Payroll run created successfully",
+    "run_approved_successfully": "Payroll run approved successfully",
+    "run_marked_paid_successfully": "Payroll run marked as paid successfully",
+    "entry_not_found": "Payroll entry not found for this employee",
+    "payslip_forbidden": "You can only view your own payslip",
+    "incentive_not_found": "Incentive not found",
+    "incentive_linked_to_paid": "Cannot delete an incentive that is linked to a paid payroll run",
+    "incentive_created_successfully": "Incentive added successfully",
+    "incentive_deleted_successfully": "Incentive deleted successfully"
+  },
   "validation": {
+    "payroll": {
+      "month": {
+        "required": "Month is required",
+        "invalid": "Month must be a valid integer",
+        "range": "Month must be between 1 and 12"
+      },
+      "year": {
+        "required": "Year is required",
+        "invalid": "Year must be a valid integer",
+        "range": "Year must be between 2000 and 2100"
+      },
+      "status": {
+        "invalid": "Status must be one of: DRAFT, APPROVED, PAID"
+      },
+      "userId": {
+        "required": "Employee ID is required",
+        "invalid": "Employee ID must be a valid UUID"
+      },
+      "incentiveType": {
+        "required": "Incentive type is required",
+        "invalid": "Incentive type must be one of: BONUS, COMMISSION, OVERTIME, DEDUCTION, OTHER"
+      },
+      "amount": {
+        "required": "Amount is required",
+        "invalid": "Amount must be a valid number",
+        "positive": "Amount must be greater than zero"
+      },
+      "description": {
+        "max": "Description must not exceed 500 characters"
+      },
+      "effectiveDate": {
+        "required": "Effective date is required",
+        "invalid": "Effective date must be a valid ISO date"
+      }
+    },
     "project": {
       "name": {
         "required": "Project name is required.",

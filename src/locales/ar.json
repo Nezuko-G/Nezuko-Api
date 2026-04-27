@@ -103,7 +103,57 @@
     "open_subtasks_exist": "لا يمكن إكمال هذه المهمة لأن هناك مهام فرعية لم تُكتمل بعد. يرجى إكمال جميع المهام الفرعية أولاً.",
     "subtask_nesting_not_allowed": "لا يمكن إضافة مهام فرعية داخل مهمة فرعية. مستوى واحد فقط من التفرع مسموح."
   },
+  "payroll": {
+    "run_not_found": "دورة الرواتب غير موجودة",
+    "run_already_exists": "يوجد بالفعل دورة رواتب لهذا الشهر والسنة",
+    "run_not_draft": "يمكن الموافقة على دورات الرواتب في حالة المسودة فقط",
+    "run_not_approved": "يمكن تحديد دورات الرواتب المعتمدة فقط كمدفوعة",
+    "run_created_successfully": "تم إنشاء دورة الرواتب بنجاح",
+    "run_approved_successfully": "تمت الموافقة على دورة الرواتب بنجاح",
+    "run_marked_paid_successfully": "تم تحديد دورة الرواتب كمدفوعة بنجاح",
+    "entry_not_found": "لم يتم العثور على بند راتب لهذا الموظف",
+    "payslip_forbidden": "يمكنك الاطلاع على قسيمة راتبك الخاصة فقط",
+    "incentive_not_found": "الحافز غير موجود",
+    "incentive_linked_to_paid": "لا يمكن حذف حافز مرتبط بدورة رواتب مدفوعة",
+    "incentive_created_successfully": "تمت إضافة الحافز بنجاح",
+    "incentive_deleted_successfully": "تم حذف الحافز بنجاح"
+  },
   "validation": {
+    "payroll": {
+      "month": {
+        "required": "الشهر مطلوب",
+        "invalid": "يجب أن يكون الشهر عدداً صحيحاً",
+        "range": "يجب أن يكون الشهر بين 1 و 12"
+      },
+      "year": {
+        "required": "السنة مطلوبة",
+        "invalid": "يجب أن تكون السنة عدداً صحيحاً",
+        "range": "يجب أن تكون السنة بين 2000 و 2100"
+      },
+      "status": {
+        "invalid": "يجب أن تكون الحالة إحدى القيم التالية: DRAFT أو APPROVED أو PAID"
+      },
+      "userId": {
+        "required": "معرّف الموظف مطلوب",
+        "invalid": "يجب أن يكون معرّف الموظف UUID صالحاً"
+      },
+      "incentiveType": {
+        "required": "نوع الحافز مطلوب",
+        "invalid": "يجب أن يكون نوع الحافز إحدى القيم التالية: BONUS أو COMMISSION أو OVERTIME أو DEDUCTION أو OTHER"
+      },
+      "amount": {
+        "required": "المبلغ مطلوب",
+        "invalid": "يجب أن يكون المبلغ رقماً صحيحاً",
+        "positive": "يجب أن يكون المبلغ أكبر من الصفر"
+      },
+      "description": {
+        "max": "يجب ألا يتجاوز الوصف 500 حرف"
+      },
+      "effectiveDate": {
+        "required": "تاريخ السريان مطلوب",
+        "invalid": "يجب أن يكون تاريخ السريان تاريخاً ISO صالحاً"
+      }
+    },
     "project": {
       "name": {
         "required": "اسم المشروع مطلوب.",
