@@ -10,6 +10,7 @@ import { ProjectRouter } from "../project";
 import { TimesheetRouter } from "../timesheet";
 import { PayrollRouter } from "../payroll";
 import { AssetRouter } from "../asset";
+import { ReportsRouter } from "../reports";
 
 const router = Router();
 
@@ -24,6 +25,6 @@ router.use("/asset", AssetRouter);
 router.use("/project", ProjectRouter);
 router.use("/timesheets", TimesheetRouter);
 router.use("/payrolls", PayrollRouter);
-
+router.use("/reports", ReportsRouter);
 
 export { router as GlobalRouter };
