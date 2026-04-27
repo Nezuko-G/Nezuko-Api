@@ -374,6 +374,26 @@
       "nationalId": {
         "max": "National ID must not exceed 14 characters"
       }
+    },
+    "reports": {
+      "type": {
+        "invalid": "Report type is invalid"
+      },
+      "startDate": {
+        "invalid": "Start date must be a valid ISO date"
+      },
+      "endDate": {
+        "invalid": "End date must be a valid ISO date"
+      },
+      "dateRange": {
+        "invalid": "End date must be the same as or after the start date"
+      },
+      "page": {
+        "invalid": "Page must be a positive integer"
+      },
+      "limit": {
+        "invalid": "Limit must be a positive integer"
+      }
     }
   },
   "company": {
@@ -502,6 +522,9 @@
     "invalid_employee_count": "Invalid employee count value",
     "invalid_interests": "Invalid interests value",
     "duplicate_request": "Demo request already submitted"
+  },
+  "reports": {
+    "forbidden_for_type": "You do not have permission to access this report type"
   },
   "middleware": {
     "token_not_provided": "No token provided. Please login",
