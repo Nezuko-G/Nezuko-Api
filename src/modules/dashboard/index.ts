@@ -8,6 +8,7 @@ import { LeaveRequestRouter } from "../leave-request";
 import { DepartmentRouter } from "../department";
 import { ProjectRouter } from "../project";
 import { TimesheetRouter } from "../timesheet";
+import { AttendanceRouter } from "../attendance";
 import { PayrollRouter } from "../payroll";
 import { AssetRouter } from "../asset";
 import { ReportsRouter } from "../reports";
@@ -24,6 +25,7 @@ router.use("/department", DepartmentRouter);
 router.use("/asset", AssetRouter);
 router.use("/project", ProjectRouter);
 router.use("/timesheets", TimesheetRouter);
+router.use("/attendance", AttendanceRouter);
 router.use("/payrolls", PayrollRouter);
 router.use("/reports", ReportsRouter);
 
