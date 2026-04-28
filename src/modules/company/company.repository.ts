@@ -87,7 +87,7 @@ export const companyRepository = {
       },
     });
   },
-
+  
   updateCompanySettings(tenantId: string, data: UpdateCompanySettingsInput) {
     return prisma.companySettings.update({
       where: { tenantId },
@@ -162,6 +162,8 @@ export const companyRepository = {
         geofenceLat: true,
         geofenceLng: true,
         geofenceRadiusM: true,
+        locationAttendanceEnabled: true,
+        requireLocation: true,
       },
     });
   },

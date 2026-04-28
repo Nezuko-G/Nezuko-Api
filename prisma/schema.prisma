@@ -87,6 +87,8 @@ model AttendanceSettings {
   geofenceLat       Float?  @map("geofence_lat")
   geofenceLng       Float?  @map("geofence_lng")
   geofenceRadiusM   Int?    @map("geofence_radius_m")
+  locationAttendanceEnabled Boolean @default(false) @map("location_attendance_enabled")
+  requireLocation   Boolean @default(true)  @map("require_location")
 
   tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
 

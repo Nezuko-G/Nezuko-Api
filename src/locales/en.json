@@ -538,6 +538,14 @@
     "MANAGER_NOT_IN_TENANT": "Selected manager does not belong to this company",
     "DEPARTMENT_HAS_CHILDREN": "Cannot delete department because it has child departments"
   },
+  "attendance": {
+    "feature_not_enabled": "Location attendance is not enabled for this organization",
+    "location_required": "Location coordinates are required",
+    "outside_geofence": "You are outside the allowed area ({{distance}}m away, max {{max}}m)",
+    "already_recorded": "Attendance already recorded for today",
+    "check_in_success": "Check-in recorded successfully",
+    "check_out_success": "Check-out recorded successfully"
+  },
   "asset": {
     "serial_exists": "An asset with this serial number already exists in your company.",
     "invalid_status": "Invalid asset status provided.",
