@@ -33,6 +33,8 @@ export type UpdateAttendanceSettingsInput = {
   geofenceLat?: number;
   geofenceLng?: number;
   geofenceRadiusM?: number;
+  locationAttendanceEnabled?: boolean;
+  requireLocation?: boolean;
 };
 
 export type AttendanceSettingsUpdatePersistenceInput = {
@@ -49,4 +51,6 @@ export type AttendanceSettingsUpdatePersistenceInput = {
   geofenceLat?: number | null;
   geofenceLng?: number | null;
   geofenceRadiusM?: number | null;
+  locationAttendanceEnabled?: boolean;
+  requireLocation?: boolean;
 };
