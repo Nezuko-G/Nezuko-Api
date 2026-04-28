@@ -133,6 +133,8 @@ export const updateAttendanceSettingsSchema = Joi.object({
     "number.min": "company.attendance.geofenceRadiusM.range",
     "number.max": "company.attendance.geofenceRadiusM.range",
   }),
+  locationAttendanceEnabled: Joi.boolean(),
+  requireLocation: Joi.boolean(),
 })
   .min(1)
   .messages({
