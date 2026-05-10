@@ -57,7 +57,7 @@ app.use((_req: Request, res: Response, next: NextFunction) => {
 });
 
 app.use(cors({
-  origin: "*",
+  origin: "http://localhost:3000",  
   credentials: true
 }));
 
