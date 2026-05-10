@@ -8,8 +8,8 @@ export const leaveRequestController = {
         {
           tenantId: req.user!.tenantId,
           userId: req.user!.id,
-          startDate: new Date(`${req.body.startDate}T00:00:00.000Z`),
-          endDate: new Date(`${req.body.endDate}T00:00:00.000Z`),
+          startDate: new Date(`${req.body.startDate}`),
+          endDate: new Date(`${req.body.endDate}`),
           reason: req.body.reason,
         },
         req._t,
