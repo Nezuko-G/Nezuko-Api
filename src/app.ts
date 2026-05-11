@@ -1,5 +1,6 @@
 import express, { Application, Request, Response, NextFunction } from "express";
 import cors from "cors";
+import corsOptions from "@/shared/config/cores.options";
 import morgan from "morgan";
 import helmet from "helmet";
 import cookieParser from "cookie-parser";
@@ -56,10 +57,7 @@ app.use((_req: Request, res: Response, next: NextFunction) => {
   next();
 });
 
-app.use(cors({
-  origin: "http://localhost:3000",  
-  credentials: true
-}));
+app.use(cors(corsOptions));
 
 app.use(timeout("50s"));
 app.use(express.json({
