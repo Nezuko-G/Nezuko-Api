@@ -12,6 +12,7 @@ import { AttendanceRouter } from "../attendance";
 import { PayrollRouter } from "../payroll";
 import { AssetRouter } from "../asset";
 import { ReportsRouter } from "../reports";
+import { DashboardRouter } from "./dashboard.routes.js";
 
 const router = Router();
 
@@ -28,5 +29,6 @@ router.use("/timesheets", TimesheetRouter);
 router.use("/attendance", AttendanceRouter);
 router.use("/payrolls", PayrollRouter);
 router.use("/reports", ReportsRouter);
+router.use("/dashboard", DashboardRouter);
 
 export { router as GlobalRouter };
