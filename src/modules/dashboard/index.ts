@@ -13,6 +13,7 @@ import { PayrollRouter } from "../payroll";
 import { AssetRouter } from "../asset";
 import { ReportsRouter } from "../reports";
 import { DashboardRouter } from "./dashboard.routes.js";
+import { ChatbotRouter } from "@/modules/chatbot/index.js";
 
 const router = Router();
 
@@ -30,5 +31,6 @@ router.use("/attendance", AttendanceRouter);
 router.use("/payrolls", PayrollRouter);
 router.use("/reports", ReportsRouter);
 router.use("/dashboard", DashboardRouter);
+router.use("/chatbot", ChatbotRouter);
 
 export { router as GlobalRouter };
