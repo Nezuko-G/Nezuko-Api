@@ -30,6 +30,7 @@ export const employeeRepository = {
         gender: data.gender ?? null,
         dateOfBirth: data.dateOfBirth ?? null,
         phone: data.phone ?? null,
+        departmentId: data.departmentId ?? null,
       },
     });
   },
@@ -56,6 +57,13 @@ export const employeeRepository = {
           hireDate: true,
           departmentId: true,
           createdAt: true,
+          department: {
+            select: {
+              id: true,
+              name: true,
+              managerId: true,
+            },
+          },
         },
       }),
       prisma.user.count({ where: { tenantId } }),
@@ -68,6 +76,15 @@ export const employeeRepository = {
     return prisma.user.findFirst({
       where: { id, tenantId },
       omit: { passwordHash: true, isActive: true },
+      include: {
+        department: {
+          select: {
+            id: true,
+            name: true,
+            managerId: true,
+          },
+        },
+      },
     });
   },
 

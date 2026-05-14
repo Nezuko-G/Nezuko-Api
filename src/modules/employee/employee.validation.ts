@@ -44,6 +44,8 @@ export const createEmployeeSchema = Joi.object({
     .messages({
       "string.pattern.base": "validation.phone.invalid",
     }),
+  departmentId: Joi.string().uuid().optional().allow(null),
+
 });
 
 export const updateEmployeeSchema = Joi.object({
