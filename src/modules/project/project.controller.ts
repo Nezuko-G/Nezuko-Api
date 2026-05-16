@@ -20,7 +20,7 @@ export const projectController = {
 
       const result = await projectService.listProjects(tenantId, filter, t);
 
-      res.status(200).json({ data: result });
+      res.status(200).json({ data: result.data, ...result });
     } catch (error) {
       next(error);
     }

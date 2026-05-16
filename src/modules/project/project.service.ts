@@ -22,7 +22,7 @@ export const projectService = {
       await projectRepository.listProjects(tenantId, filter);
 
     return {
-      projects: data,
+      data,
       meta: { total, page, limit, totalPages },
     };
   },
