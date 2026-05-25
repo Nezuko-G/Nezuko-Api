@@ -22,6 +22,8 @@ export const employeeService = {
     const tempPassword = randomUUID().slice(0, 8);
     const hashedPassword = await hashPassword(tempPassword);
 
+
+
     const { passwordHash, isActive, ...employee } = await employeeRepository.createEmployee({
       ...input,
       passwordHash: hashedPassword,
@@ -40,7 +42,10 @@ export const employeeService = {
       tempPassword,
     });
 
-    return employee;
+    return {
+      ...employee,
+      tempPassword,
+    }
   },
   async getEmployees(tenantId: string, page: number, limit: number) {
     const { employees, total } = await employeeRepository.getEmployees(tenantId, page, limit);
@@ -106,7 +111,7 @@ export const employeeService = {
       const stream = cloudinary.uploader.upload_stream(
         {
           folder: `employees/${userId}/documents`,
-          resource_type: "auto", 
+          resource_type: "auto",
         },
         (error, result) => {
           if (error || !result) return reject(error);
