@@ -70,12 +70,12 @@ export const attendanceService = {
     const settings = await attendanceRepository.getAttendanceSettings(tenantId);
 
     if (!settings) {
-      throw new ForbiddenError(t("attendance.feature_not_enabled"));
+      throw new ForbiddenError(t("attendance.feature_not_enabled"), "FEATURE_DISABLED");
     }
 
     // Step 2: Check if location attendance feature is enabled
     if (!settings.locationAttendanceEnabled) {
-      throw new ForbiddenError(t("attendance.feature_not_enabled"));
+      throw new ForbiddenError(t("attendance.feature_not_enabled"), "FEATURE_DISABLED");
     }
 
     // Step 3: Check if location is required and provided
@@ -113,6 +113,8 @@ export const attendanceService = {
       if (distance > settings.geofenceRadiusM) {
         throw new ForbiddenError(
           buildOutsideGeofenceMessage(t, distance, settings.geofenceRadiusM),
+          "OUTSIDE_GEOFENCE",
+          { distance, maxDistance: settings.geofenceRadiusM },
         );
       }
     }
@@ -174,7 +176,7 @@ export const attendanceService = {
     }
 
     // Case 3: Both check-in and check-out exist -> Error
-    throw new BadRequestError(t("attendance.already_recorded"));
+    throw new BadRequestError(t("attendance.already_recorded"), "ALREADY_RECORDED");
   },
 
   async listTimesheets(tenantId: string, filter: any, t: Translator) {
