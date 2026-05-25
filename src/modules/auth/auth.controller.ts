@@ -36,4 +36,16 @@ export const authController = {
       next(error);
     }
   },
+  async me(req: Request, res: Response, next: NextFunction) {
+    try {
+      const result = await authService.getMe(req);
+
+      res.status(200).json({
+        status: "success",
+        data: result,
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
 };

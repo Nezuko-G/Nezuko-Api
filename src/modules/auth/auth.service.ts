@@ -2,7 +2,7 @@ import { comparePassword } from "@/shared/utils/hash.js";
 import { authRepository } from "./auth.repository.js";
 import { generateToken } from "@/shared/utils/jwt.js";
 import { setCookieToken } from "@/shared/utils/helpers.js";
-import { UnauthorizedError } from "@/shared/errors/errors.js";
+import { NotFoundError, UnauthorizedError } from "@/shared/errors/errors.js";
 import type { Request, Response } from "express";
 
 function cleanUser(user: any) {
@@ -46,4 +46,14 @@ export const authService = {
     async logout(res: Response) {
         res.clearCookie("jwt");
     },
+    async getMe(req: Request) {
+        const userId = req.user?.id;
+        if (!userId) throw new UnauthorizedError(req._t("auth.unauthorized"));
+
+        const user = await authRepository.findUserById(userId);
+        if (!user) throw new NotFoundError(req._t("auth.user_not_found"));
+
+        return user;
+    },
+    
 };
