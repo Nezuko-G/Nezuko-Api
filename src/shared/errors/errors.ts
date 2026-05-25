@@ -12,11 +12,15 @@ export abstract class HttpError extends Error {
 
 export class BadRequestError extends Error {
   public readonly statusCode: number;
+  public readonly code?: string;
+  public readonly data?: Record<string, unknown>;
 
-  constructor(message: string = "Bad Request") {
+  constructor(message: string = "Bad Request", code?: string, data?: Record<string, unknown>) {
     super(message);
     this.name = "BadRequestError";
     this.statusCode = 400;
+    this.code = code;
+    this.data = data;
     Object.setPrototypeOf(this, BadRequestError.prototype);
   }
 }
@@ -45,11 +49,15 @@ export class PaymentRequiredError extends Error {
 
 export class ForbiddenError extends Error {
   public readonly statusCode: number;
+  public readonly code?: string;
+  public readonly data?: Record<string, unknown>;
 
-  constructor(message: string = "Forbidden") {
+  constructor(message: string = "Forbidden", code?: string, data?: Record<string, unknown>) {
     super(message);
     this.name = "ForbiddenError";
     this.statusCode = 403;
+    this.code = code;
+    this.data = data;
     Object.setPrototypeOf(this, ForbiddenError.prototype);
   }
 }

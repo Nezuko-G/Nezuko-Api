@@ -2,12 +2,14 @@ import { Request, Response, NextFunction } from "express";
 
 interface CustomError extends Error {
   statusCode?: number;
+  code?: string;
   data?: any;
 }
 
 interface ErrorResponse {
   status: number;
   message: string;
+  code?: string;
   errors?: any;
 }
 
@@ -33,6 +35,10 @@ const globalErrorHandler = (
     status,
     message,
   };
+
+  if (err.code) {
+    errorResponse.code = err.code;
+  }
 
   if (err.data) {
     errorResponse.errors = err.data;

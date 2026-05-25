@@ -117,6 +117,8 @@ export const companyRepository = {
         roundingEnabled: false,
         requireBiometric: false,
         geofenceEnabled: false,
+        locationAttendanceEnabled: false,
+        requireLocation: false,
       },
       update: {},
       select: {
@@ -135,6 +137,8 @@ export const companyRepository = {
         geofenceLat: true,
         geofenceLng: true,
         geofenceRadiusM: true,
+        locationAttendanceEnabled: true,
+        requireLocation: true,
       },
     });
   },
