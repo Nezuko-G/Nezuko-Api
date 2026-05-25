@@ -55,6 +55,7 @@ model Tenant {
   payrollRuns          PayrollRun[]
   payrollEntries       PayrollEntry[]
   incentives           Incentive[]
+  chatSessions         ChatSession[]
 
   @@map("tenants")
 }
@@ -72,23 +73,23 @@ model CompanySettings {
 }
 
 model AttendanceSettings {
-  id                String  @id @default(uuid())
-  tenantId          String  @unique @map("tenant_id")
-  workDayStart      String  @default("09:00") @map("work_day_start")
-  workDayEnd        String  @default("17:00") @map("work_day_end")
-  workingDays       Int[]   @default([0, 1, 2, 3, 4]) @map("working_days")
-  lateGraceMinutes  Int     @default(0) @map("late_grace_minutes")
-  earlyLeaveGrace   Int     @default(0) @map("early_leave_grace")
-  overtimeThreshold Int     @default(0) @map("overtime_threshold")
-  roundingEnabled   Boolean @default(false) @map("rounding_enabled")
-  roundingMinutes   Int?    @map("rounding_minutes")
-  requireBiometric  Boolean @default(false) @map("require_biometric")
-  geofenceEnabled   Boolean @default(false) @map("geofence_enabled")
-  geofenceLat       Float?  @map("geofence_lat")
-  geofenceLng       Float?  @map("geofence_lng")
-  geofenceRadiusM   Int?    @map("geofence_radius_m")
+  id                        String  @id @default(uuid())
+  tenantId                  String  @unique @map("tenant_id")
+  workDayStart              String  @default("09:00") @map("work_day_start")
+  workDayEnd                String  @default("17:00") @map("work_day_end")
+  workingDays               Int[]   @default([0, 1, 2, 3, 4]) @map("working_days")
+  lateGraceMinutes          Int     @default(0) @map("late_grace_minutes")
+  earlyLeaveGrace           Int     @default(0) @map("early_leave_grace")
+  overtimeThreshold         Int     @default(0) @map("overtime_threshold")
+  roundingEnabled           Boolean @default(false) @map("rounding_enabled")
+  roundingMinutes           Int?    @map("rounding_minutes")
+  requireBiometric          Boolean @default(false) @map("require_biometric")
+  geofenceEnabled           Boolean @default(false) @map("geofence_enabled")
+  geofenceLat               Float?  @map("geofence_lat")
+  geofenceLng               Float?  @map("geofence_lng")
+  geofenceRadiusM           Int?    @map("geofence_radius_m")
   locationAttendanceEnabled Boolean @default(false) @map("location_attendance_enabled")
-  requireLocation   Boolean @default(true)  @map("require_location")
+  requireLocation           Boolean @default(true) @map("require_location")
 
   tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
 
@@ -152,6 +153,7 @@ model User {
   createdIncentives    Incentive[]           @relation("CreatedIncentives")
   createdPayrolls      PayrollRun[]          @relation("CreatedPayrolls")
   approvedPayrolls     PayrollRun[]          @relation("ApprovedPayrolls")
+  chatSessions         ChatSession[]
 
   @@unique([tenantId, email])
   @@map("users")
@@ -363,6 +365,37 @@ model InsuranceDependent {
 
   @@unique([enrollmentId, nationalId])
   @@map("insurance_dependents")
+}
+
+enum MessageRole {
+  USER
+  ASSISTANT
+}
+
+model ChatSession {
+  id        String   @id @default(uuid())
+  tenantId  String   @map("tenant_id")
+  userId    String   @map("user_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  tenant   Tenant        @relation(fields: [tenantId], references: [id])
+  user     User          @relation(fields: [userId], references: [id])
+  messages ChatMessage[]
+
+  @@map("chat_sessions")
+}
+
+model ChatMessage {
+  id        String      @id @default(uuid())
+  sessionId String      @map("session_id")
+  role      MessageRole
+  content   String
+  createdAt DateTime    @default(now()) @map("created_at")
+
+  session ChatSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@map("chat_messages")
 }
 
 enum EmployeeCount {
