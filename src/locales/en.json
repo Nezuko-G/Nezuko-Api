@@ -600,7 +600,6 @@
     "error_invalid_message": "Message cannot be empty",
     "error_api_key_missing": "Chatbot API key is not configured",
     "error_service_unavailable": "Chatbot service is temporarily unavailable",
-    "welcome_message": "Welcome to HR Assistant! How can I help you today?",
     "hr_inquiry": "What would you like to know about?",
     "general_help": "I can help you with leave policies, attendance, payroll, benefits, insurance, and general HR inquiries",
     "contact_hr": "For more information, please contact the HR department directly",
