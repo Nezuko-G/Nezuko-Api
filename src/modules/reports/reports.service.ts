@@ -563,12 +563,14 @@ const uploadReportFile = async (params: {
           context: {
             reportType,
             generatedBy,
-            filters: JSON.stringify({
-              startDate: filters.startDate?.toISOString() ?? null,
-              endDate: filters.endDate?.toISOString() ?? null,
-              departmentId: filters.departmentId ?? null,
-              userId: filters.userId ?? null,
-            }),
+            filters: Buffer.from(
+              JSON.stringify({
+                startDate: filters.startDate?.toISOString() ?? null,
+                endDate: filters.endDate?.toISOString() ?? null,
+                departmentId: filters.departmentId ?? null,
+                userId: filters.userId ?? null,
+              }),
+            ).toString("base64"),
           },
         },
         (error, result) => {
@@ -594,10 +596,29 @@ const parseHistoryFilters = (value: unknown): Record<string, unknown> => {
   }
 
   try {
-    return JSON.parse(value) as Record<string, unknown>;
+    return JSON.parse(
+      Buffer.from(value, "base64").toString("utf-8"),
+    ) as Record<string, unknown>;
   } catch {
     return {};
   }
+};
+
+const deriveTypeFromFileName = (resource: {
+  public_id: string;
+}): string => {
+  const fileName = resource.public_id.split("/").pop() ?? "";
+  const knownTypes: string[] = [
+    "headcount",
+    "leave-summary",
+    "overtime",
+    "asset-custody",
+    "task-completion",
+  ];
+  for (const t of knownTypes) {
+    if (fileName.startsWith(t)) return t;
+  }
+  return "unknown";
 };
 
 const getReportTypeDefinition = (type: string): ReportTypeDefinition => {
@@ -753,14 +774,16 @@ export const reportsService = {
       const customContext = resource.context?.custom ?? {};
 
       return {
-        type: customContext.reportType ?? "unknown",
+        type: customContext.reportType ?? deriveTypeFromFileName(resource),
         generatedBy:
           typeof customContext.generatedBy === "string"
             ? customContext.generatedBy
             : null,
         generatedAt: resource.created_at,
         format: resource.format ?? "unknown",
-        fileName: `${resource.public_id}.${resource.format}`,
+        fileName: resource.public_id.endsWith(`.${resource.format}`)
+          ? resource.public_id
+          : `${resource.public_id}.${resource.format}`,
         downloadUrl: resource.secure_url,
         filters: parseHistoryFilters(customContext.filters),
       };
