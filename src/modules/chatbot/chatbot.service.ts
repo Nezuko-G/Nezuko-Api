@@ -95,6 +95,10 @@ export class ChatbotService {
     });
 
     const model = getModel();
+    if (!model) {
+      throw new Error("Chatbot is not available ");
+    }
+
     const history = session.messages.map((m) => ({
       role: m.role === "USER" ? "user" as const : "model" as const,
       parts: [{ text: m.content }],
@@ -115,7 +119,7 @@ export class ChatbotService {
 
       if (functionCalls && functionCalls.length > 0) {
         const toolResults = await Promise.all(
-          functionCalls.map(async (fc) => {
+          functionCalls.map(async (fc: any) => {
             const result = await executeToolCall(fc.name, fc.args as Record<string, unknown>);
             return {
               functionResponse: {

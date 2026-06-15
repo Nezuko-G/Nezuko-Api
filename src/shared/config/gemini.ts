@@ -3,10 +3,10 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 const API_KEY = process.env.GOOGLE_GEMINI_API_KEY;
 
 if (!API_KEY) {
-  throw new Error("GOOGLE_GEMINI_API_KEY is not configured");
+  console.warn("GOOGLE_GEMINI_API_KEY is not configured — chatbot features will be unavailable");
 }
 
-const genAI = new GoogleGenerativeAI(API_KEY);
+const genAI = API_KEY ? new GoogleGenerativeAI(API_KEY) : null;
 
 export const MODEL_NAME = "gemini-3.1-flash-lite" as const;
 
@@ -18,6 +18,7 @@ export const generationConfig = Object.freeze({
 });
 
 export const getModel = () => {
+  if (!genAI) return null;
   return genAI.getGenerativeModel({
     model: MODEL_NAME,
     generationConfig,

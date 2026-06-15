@@ -4,10 +4,20 @@ import * as dotenv from "dotenv";
 
 dotenv.config();
 
-const adapter = new PrismaPg({
-  connectionString: process.env.DATABASE_URL as string,
-});
+const databaseUrl = process.env.DATABASE_URL;
 
-const prisma = new PrismaClient({ adapter });
+if (!databaseUrl) {
+  console.error("Missing DATABASE_URL environment variable");
+}
+
+let prisma: PrismaClient;
+
+if (databaseUrl) {
+  const adapter = new PrismaPg({ connectionString: databaseUrl });
+  prisma = new PrismaClient({ adapter });
+} else {
+  prisma = new PrismaClient();
+  console.warn("DATABASE_URL not set — Prisma initialized without connection pool adapter");
+}
 
 export default prisma;

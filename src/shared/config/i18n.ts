@@ -2,14 +2,22 @@ import i18n from "i18n";
 import path from "path";
 import { fileURLToPath } from "url";
 import { Request, Response, NextFunction } from "express";
+import fs from "fs";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const bundledDir = path.dirname(fileURLToPath(import.meta.url));
+const possibleDirs = [
+  path.join(bundledDir, "../../src/locales"),
+  path.join(bundledDir, "../../locales"),
+  path.join(process.cwd(), "src/locales"),
+  path.join(process.cwd(), "locales"),
+];
+
+const localeDir = possibleDirs.find((dir) => fs.existsSync(dir)) || possibleDirs[0];
 
 i18n.configure({
   locales: ["ar", "en"],
   defaultLocale: "en",
-  directory: path.join(__dirname, "../../locales"),
+  directory: localeDir,
   queryParameter: "lang",
   cookie: "lang",
   autoReload: true,

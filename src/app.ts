@@ -14,13 +14,11 @@ import { notFoundMiddleware } from "@/shared/middleware/not_found.middleware";
 import dotenv from "dotenv";
 import { GlobalRouter } from "./modules/dashboard";
 
-
 dotenv.config({ quiet: true });
 
-// Validate required environment variables
 if (!process.env.NODE_ENV) {
-  console.error("Missing required environment variable: NODE_ENV");
-  process.exit(1);
+  console.warn("Warning: NODE_ENV is not set, defaulting to 'production'");
+  process.env.NODE_ENV = "production";
 }
 
 const app: Application = express();
