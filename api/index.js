@@ -16,16 +16,34 @@ var __export = (target, all) => {
 // src/shared/config/prisma.ts
 import { PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
+import { setServers, resolve4Sync } from "node:dns";
 import * as dotenv from "dotenv";
-var databaseUrl, prisma, prisma_default;
+function resolveHostname(urlStr) {
+  try {
+    const url = new URL(urlStr);
+    const hostname = url.hostname;
+    if (hostname === "localhost" || hostname === "127.0.0.1") return urlStr;
+    setServers(["8.8.8.8", "1.1.1.1"]);
+    const addresses = resolve4Sync(hostname);
+    if (addresses.length > 0) {
+      url.hostname = addresses[0];
+      return url.toString();
+    }
+  } catch (err) {
+    console.error("DNS resolution failed, using original hostname:", err);
+  }
+  return urlStr;
+}
+var rawUrl, databaseUrl, prisma, prisma_default;
 var init_prisma = __esm({
   "src/shared/config/prisma.ts"() {
     "use strict";
     dotenv.config();
-    databaseUrl = process.env.DATABASE_URL;
-    if (!databaseUrl) {
+    rawUrl = process.env.DATABASE_URL;
+    if (!rawUrl) {
       console.error("Missing DATABASE_URL environment variable");
     }
+    databaseUrl = rawUrl ? resolveHostname(rawUrl) : void 0;
     if (databaseUrl) {
       const adapter = new PrismaPg({ connectionString: databaseUrl });
       prisma = new PrismaClient({ adapter });
