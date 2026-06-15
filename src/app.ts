@@ -12,6 +12,7 @@ import { i18nMiddleware } from "@/shared/config/i18n";
 import { notFoundMiddleware } from "@/shared/middleware/not_found.middleware";
 import dotenv from "dotenv";
 import { GlobalRouter } from "./modules/dashboard";
+import { corsOptions } from "@/shared/config/cors";
 
 dotenv.config({ quiet: true });
 
@@ -50,7 +51,7 @@ app.use((_req: Request, res: Response, next: NextFunction) => {
   next();
 });
 
-app.use(cors({ origin: true, credentials: true }));
+app.use(cors(corsOptions));
 
 app.use(timeout("50s"));
 app.use(express.json({

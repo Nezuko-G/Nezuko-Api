@@ -9965,6 +9965,19 @@ router15.use("/reports", router13);
 router15.use("/dashboard", router14);
 router15.use("/chatbot", ChatbotRouter);
 
+// src/shared/config/cors.ts
+var allowedOrigins = (process.env.ALLOWED_ORIGINS || "").split(",").map((s) => s.trim()).filter(Boolean);
+var corsOptions = {
+  origin(origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error(`Origin ${origin} not allowed by CORS`));
+    }
+  },
+  credentials: true
+};
+
 // src/app.ts
 dotenv3.config({ quiet: true });
 if (!process.env.NODE_ENV) {
@@ -9996,7 +10009,7 @@ app.use((_req, res, next) => {
   res.removeHeader("X-Powered-By");
   next();
 });
-app.use(cors({ origin: true, credentials: true }));
+app.use(cors(corsOptions));
 app.use(timeout("50s"));
 app.use(express.json({
   limit: "10kb",
