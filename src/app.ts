@@ -18,14 +18,10 @@ import { GlobalRouter } from "./modules/dashboard";
 dotenv.config({ quiet: true });
 
 // Validate required environment variables
-const requiredEnvVars = ["NODE_ENV", "PORT"];
-
-requiredEnvVars.forEach((varName) => {
-  if (!process.env[varName]) {
-    console.error(`Missing required environment variable: ${varName}`);
-    process.exit(1);
-  }
-});
+if (!process.env.NODE_ENV) {
+  console.error("Missing required environment variable: NODE_ENV");
+  process.exit(1);
+}
 
 const app: Application = express();
 
