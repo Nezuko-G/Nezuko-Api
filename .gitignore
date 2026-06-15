@@ -6,3 +6,4 @@ yarn.lock
 
 /src/generated/prisma
 api/index.js
+.vercel
