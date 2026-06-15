@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "dev": "tsx watch src/server.ts",
-    "build": "tsc",
+    "build": "prisma generate && tsc",
+    "postinstall": "prisma generate",
     "start": "node dist/server.js",
     "seed:books": "tsx -r dotenv/config src/shared/database/seeders/seedBooks.ts",
     "seed:users": "tsx -r dotenv/config src/shared/database/seeders/seedUsers.ts",
@@ -53,7 +54,8 @@
     "stripe": "^20.4.1",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1",
-    "xss-clean": "^0.1.4"
+    "xss-clean": "^0.1.4",
+    "prisma": "^7.8.0"
   },
   "devDependencies": {
     "@types/axios": "^0.9.36",
@@ -73,7 +75,6 @@
     "@types/passport": "^1.0.17",
     "@types/passport-google-oauth20": "^2.0.17",
     "@types/swagger-ui-express": "^4.1.8",
-    "prisma": "^7.8.0",
     "ts-node-dev": "^2.0.0",
     "tsconfig-paths": "^4.2.0",
     "tsx": "^4.21.0",
