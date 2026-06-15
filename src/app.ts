@@ -22,6 +22,7 @@ if (!process.env.NODE_ENV) {
 }
 
 const app: Application = express();
+app.set("trust proxy", 1);
 
 app.use(
   helmet({

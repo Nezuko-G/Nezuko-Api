@@ -998,8 +998,7 @@ var setCookieToken = (res, token, req) => {
     ),
     httpOnly: true,
     secure: process.env.NODE_ENV === "production" && (req.secure || req.headers["x-forwarded-proto"] === "https"),
-    sameSite: "strict"
-    // Added CSRF protection
+    sameSite: "none"
   };
   res.cookie("jwt", token, cookieOptions);
 };
@@ -9985,6 +9984,7 @@ if (!process.env.NODE_ENV) {
   process.env.NODE_ENV = "production";
 }
 var app = express();
+app.set("trust proxy", 1);
 app.use(
   helmet({
     contentSecurityPolicy: {
