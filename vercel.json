@@ -1,6 +1,11 @@
 {
   "framework": null,
   "buildCommand": "npm run build:vercel",
+  "functions": {
+    "api/index.js": {
+      "runtime": "nodejs@20.x"
+    }
+  },
   "rewrites": [
     { "source": "/(.*)", "destination": "/api/index" }
   ]
