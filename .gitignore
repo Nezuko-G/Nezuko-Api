@@ -5,3 +5,4 @@ yarn.lock
 .DS_Store
 
 /src/generated/prisma
+api/index.js
