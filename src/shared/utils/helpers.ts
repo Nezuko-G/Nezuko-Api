@@ -8,9 +8,10 @@ export const setCookieToken = (res: Response, token: string, req: Request) => {
     ),
     httpOnly: true,
     secure:
-      process.env.NODE_ENV === "production" &&
-      (req.secure || req.headers["x-forwarded-proto"] === "https"),
-    sameSite: "none",
+      process.env.NODE_ENV === "production"
+        ? req.secure || req.headers["x-forwarded-proto"] === "https"
+        : false,
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
   };
   res.cookie("jwt", token, cookieOptions);
 };
