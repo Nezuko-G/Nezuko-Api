@@ -1,7 +1,6 @@
 import { employeeRepository } from "./employee.repository.js";
 import { generateEmployeeCode } from "@/shared/utils/employeeCode.js";
 import { hashPassword } from "@/shared/utils/hash.js";
-import { emailService } from "@/shared/services/email.service.js";
 import { ConflictError, NotFoundError } from "@/shared/errors/errors.js";
 import { randomUUID } from "node:crypto";
 import type { CreateEmployeeInput, UpdateEmployeeInput } from "@/shared/interfaces/employee.interface.js";
@@ -35,12 +34,12 @@ export const employeeService = {
       phone: input.phone ?? null,
     });
 
-    await emailService.sendEmployeeWelcome({
-      to: employee.email,
-      name: `${employee.firstName} ${employee.lastName}`,
-      employeeCode: employee.employeeCode!,
-      tempPassword,
-    });
+    // await emailService.sendEmployeeWelcome({
+    //   to: employee.email,
+    //   name: `${employee.firstName} ${employee.lastName}`,
+    //   employeeCode: employee.employeeCode!,
+    //   tempPassword,
+    // });
 
     return {
       ...employee,

@@ -1,5 +1,4 @@
 import prisma from "@/shared/config/prisma.js";
-import { EmployeeCount, Interest } from "@prisma/client";
 import type { CreateDemoRequestInput } from "@/shared/interfaces/booking-demo-request.interface.js";
 
 export const bookingDemoRequestRepository = {

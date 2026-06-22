@@ -1,5 +1,5 @@
 import Joi from "joi";
-import { phoneSchema } from "@/shared/validations/common.validations.js";
+import { phoneSchema } from "@/shared/validations/common.validations";
 
 const interestSchema = Joi.string()
   .trim()

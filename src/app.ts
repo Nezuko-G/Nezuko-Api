@@ -82,12 +82,6 @@ if (process.env.NODE_ENV === "development") {
 
 app.use(compression());
 
-app.get("/test-hash", async (req, res) => {
-  const bcrypt = await import("bcrypt");
-  const hash = await bcrypt.default.hash("Password123", 10);
-  const isValid = await bcrypt.default.compare("Password123", hash);
-  res.json({ hash, isValid });
-});
 
 app.use("/api/v1", GlobalRouter);
 

@@ -1,9 +1,10 @@
 import prisma from "@/shared/config/prisma.js";
-import type { Prisma, PrismaClient } from "@prisma/client";
+import { Prisma, PrismaClient } from "@prisma/client";
 import type {
   CreateInsuranceDependentInput,
   CreateInsuranceEnrollmentInput,
   CreateInsurancePlanInput,
+  InsurancePlanFilters,
   UpdateInsurancePlanInput,
 } from "@/shared/interfaces/insurance.interface.js";
 
@@ -18,19 +19,30 @@ export const insuranceRepository = {
       select: { id: true },
     });
   },
+  async getInsurancePlans(tenantId: string, params: InsurancePlanFilters, client?: DbClient) {
+    const { page = 1, limit = 10, search, type, status } = params;
 
-  getInsurancePlans(tenantId: string, client?: DbClient) {
-    return db(client).insurancePlan.findMany({
-      where: { tenantId },
-      orderBy: { createdAt: "desc" },
-      include: {
-        _count: {
-          select: {
-            enrollments: true,
-          },
-        },
-      },
-    });
+    const where: Prisma.InsurancePlanWhereInput = {
+      tenantId,
+      ...(search && {
+        name: { contains: search, mode: Prisma.QueryMode.insensitive },
+      }),
+      ...(type && { type }),
+      ...(status !== undefined && { isActive: status === 'active' }),
+    };
+
+    const [plans, total] = await Promise.all([
+      db(client).insurancePlan.findMany({
+        where,
+        skip: (page - 1) * limit,
+        take: limit,
+        orderBy: { createdAt: 'desc' },
+        include: { _count: { select: { enrollments: true } } },
+      }),
+      db(client).insurancePlan.count({ where }),
+    ]);
+
+    return { plans, total, page, limit, totalPages: Math.ceil(total / limit) };
   },
 
   findInsurancePlanById(tenantId: string, id: string, client?: DbClient) {

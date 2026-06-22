@@ -1,7 +1,6 @@
 import { EmployeeCount, Interest } from "@prisma/client";
 import { bookingDemoRequestRepository } from "./booking-demo-request.repository.js";
 import { BadRequestError, ConflictError } from "@/shared/errors/errors.js";
-import { bookingDemoRequestMailer } from "./booking-demo-request.mailer.js";
 import type { CreateBookingDemoRequestInput } from "@/shared/interfaces/booking-demo-request.interface.js";
 
 type Translator = (key: string) => string;
@@ -50,6 +49,7 @@ function mapInterests(values: string[], t: Translator): Interest[] {
 }
 
 export const bookingDemoRequestService = {
+
   async create(payload: CreateBookingDemoRequestInput, t: Translator) {
     const duplicateRequest = await bookingDemoRequestRepository.findDuplicate(
       payload.email.trim(),
@@ -71,7 +71,7 @@ export const bookingDemoRequestService = {
       interests: mapInterests(payload.interests, t),
     });
 
-    await bookingDemoRequestMailer.sendNewBookingDetails(created);
+
 
     return created;
   },

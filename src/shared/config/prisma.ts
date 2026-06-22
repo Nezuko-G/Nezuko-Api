@@ -17,7 +17,7 @@ if (databaseUrl) {
   prisma = new PrismaClient({ adapter });
 } else {
   prisma = new PrismaClient();
-  console.warn("DATABASE_URL not set — Prisma initialized without connection pool adapter");
+  console.warn("DATABASE_URL not set, Prisma initialized without connection pool adapter");
 }
 
 export default prisma;

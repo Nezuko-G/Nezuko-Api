@@ -8,6 +8,7 @@ import type {
   CreateInsuranceDependentInput,
   CreateInsuranceEnrollmentInput,
   CreateInsurancePlanInput,
+  InsurancePlanFilters,
   UpdateInsurancePlanInput,
 } from "@/shared/interfaces/insurance.interface.js";
 import { insuranceRepository } from "./insurance.repository.js";
@@ -46,10 +47,8 @@ async function ensureTenantExists(tenantId: string, t: Translator) {
 }
 
 export const insuranceService = {
-  async listInsurancePlans(tenantId: string) {
-    const plans = await insuranceRepository.getInsurancePlans(tenantId);
-
-    return { plans };
+  async listInsurancePlans(tenantId: string, params: InsurancePlanFilters) {
+    return insuranceRepository.getInsurancePlans(tenantId, params);
   },
 
   async createInsurancePlan(input: CreateInsurancePlanInput, t: Translator) {
@@ -318,9 +317,9 @@ export const insuranceService = {
   },
 
   async getCoverageReport(tenantId: string) {
-    const [report, plans] = await Promise.all([
+    const [report, { plans }] = await Promise.all([
       insuranceRepository.getCoverageReport(tenantId),
-      insuranceRepository.getInsurancePlans(tenantId),
+      insuranceRepository.getInsurancePlans(tenantId, {}),
     ]);
 
     const planById = new Map(plans.map((plan) => [plan.id, plan]));

@@ -2,6 +2,7 @@ import type { NextFunction, Request, Response } from "express";
 import { UserRole } from "@prisma/client";
 import { BadRequestError } from "@/shared/errors/errors.js";
 import { insuranceService } from "./insurance.service.js";
+import { InsurancePlanType } from "@/shared/interfaces/insurance.interface.js";
 
 const toParamString = (value: string | string[] | undefined) => {
   if (typeof value === "string") {
@@ -18,8 +19,17 @@ const toParamString = (value: string | string[] | undefined) => {
 export const insuranceController = {
   async listInsurancePlans(req: Request, res: Response, next: NextFunction) {
     try {
+      const { page, limit, search, type, status } = req.query;
+
       const result = await insuranceService.listInsurancePlans(
         req.user!.tenantId,
+        {
+          page: page ? Number(page) : 1,
+          limit: limit ? Number(limit) : 10,
+          search: search as string | undefined,
+          type: type as InsurancePlanType | undefined,
+          status: status as 'active' | 'inactive' | undefined,
+        },
       );
 
       res.status(200).json({ data: result });

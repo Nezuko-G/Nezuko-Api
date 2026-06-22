@@ -33,3 +33,11 @@ export interface CreateInsuranceDependentInput {
   dateOfBirth: Date;
   nationalId?: string | null;
 }
+
+export interface InsurancePlanFilters {
+  page?: number;
+  limit?: number;
+  search?: string;
+  type?: InsurancePlanType; // enum: BASIC | STANDARD | PREMIUM
+  status?: 'active' | 'inactive';
+}
