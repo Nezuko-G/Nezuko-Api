@@ -9,6 +9,7 @@ import type {
   ReviewLeaveRequestInput,
 } from "@/shared/interfaces/leave-request.interface";
 import { leaveRequestRepository } from "./leave-request.repository.js";
+import { LeaveStatus } from "@prisma/client";
 
 const MAX_LEAVE_DAYS_PER_REQUEST = 30;
 
@@ -100,18 +101,19 @@ export const leaveRequestService = {
     });
   },
 
-  async getLeaveRequests(tenantId: string, page: number, limit: number) {
+  async getLeaveRequests(
+    tenantId: string,
+    page: number,
+    limit: number,
+    search?: string,
+    status?: LeaveStatus,
+  ) {
     const { leaveRequests, total } =
-      await leaveRequestRepository.getLeaveRequests(tenantId, page, limit);
+      await leaveRequestRepository.getLeaveRequests(tenantId, page, limit, search, status);
 
     return {
       leaveRequests,
-      meta: {
-        total,
-        page,
-        limit,
-        totalPages: Math.ceil(total / limit),
-      },
+      meta: { total, page, limit, totalPages: Math.ceil(total / limit) },
     };
   },
 
@@ -120,26 +122,17 @@ export const leaveRequestService = {
     userId: string,
     page: number,
     limit: number,
+    search?: string,
+    status?: LeaveStatus,
   ) {
     const { leaveRequests, total } =
-      await leaveRequestRepository.getMyLeaveRequests(
-        tenantId,
-        userId,
-        page,
-        limit,
-      );
+      await leaveRequestRepository.getMyLeaveRequests(tenantId, userId, page, limit, search, status);
 
     return {
       leaveRequests,
-      meta: {
-        total,
-        page,
-        limit,
-        totalPages: Math.ceil(total / limit),
-      },
+      meta: { total, page, limit, totalPages: Math.ceil(total / limit) },
     };
   },
-
   async reviewLeaveRequest(
     tenantId: string,
     reviewerId: string,

@@ -1,5 +1,6 @@
 import type { NextFunction, Request, Response } from "express";
 import { leaveRequestService } from "./leave-request.service.js";
+import { LeaveStatus } from "@prisma/client";
 
 export const leaveRequestController = {
   async createLeaveRequest(req: Request, res: Response, next: NextFunction) {
@@ -29,11 +30,11 @@ export const leaveRequestController = {
       const tenantId = req.user!.tenantId;
       const page = Number(req.query.page) || 1;
       const limit = Number(req.query.limit) || 10;
+      const search = req.query.search as string | undefined;
+      const status = req.query.status as LeaveStatus | undefined;
 
       const result = await leaveRequestService.getLeaveRequests(
-        tenantId,
-        page,
-        limit,
+        tenantId, page, limit, search, status,
       );
 
       res.status(200).json({ data: result });
@@ -41,19 +42,17 @@ export const leaveRequestController = {
       next(error);
     }
   },
-
   async getMyLeaveRequests(req: Request, res: Response, next: NextFunction) {
     try {
       const tenantId = req.user!.tenantId;
       const userId = req.user!.id;
       const page = Number(req.query.page) || 1;
       const limit = Number(req.query.limit) || 10;
+      const search = req.query.search as string | undefined;
+      const status = req.query.status as LeaveStatus | undefined;
 
       const result = await leaveRequestService.getMyLeaveRequests(
-        tenantId,
-        userId,
-        page,
-        limit,
+        tenantId, userId, page, limit, search, status,
       );
 
       res.status(200).json({ data: result });

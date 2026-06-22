@@ -3,6 +3,7 @@ import type {
   CreateLeaveRequestInput,
   ReviewLeaveRequestInput,
 } from "@/shared/interfaces/leave-request.interface";
+import { LeaveStatus } from "@prisma/client";
 
 const leaveRequestSelect = {
   id: true,
@@ -66,18 +67,38 @@ export const leaveRequestRepository = {
     });
   },
 
-  async getLeaveRequests(tenantId: string, page: number, limit: number) {
+  async getLeaveRequests(
+    tenantId: string,
+    page: number,
+    limit: number,
+    search?: string,
+    status?: LeaveStatus,
+  ) {
     const skip = (page - 1) * limit;
+
+    const where = {
+      tenantId,
+      ...(status && { status }),
+      ...(search && {
+        user: {
+          OR: [
+            { firstName: { contains: search, mode: "insensitive" as const } },
+            { lastName: { contains: search, mode: "insensitive" as const } },
+            { email: { contains: search, mode: "insensitive" as const } },
+          ],
+        },
+      }),
+    };
 
     const [leaveRequests, total] = await prisma.$transaction([
       prisma.leaveRequest.findMany({
-        where: { tenantId },
+        where,
         skip,
         take: limit,
         orderBy: { createdAt: "desc" },
         select: leaveRequestSelect,
       }),
-      prisma.leaveRequest.count({ where: { tenantId } }),
+      prisma.leaveRequest.count({ where }),
     ]);
 
     return { leaveRequests, total };
@@ -88,18 +109,35 @@ export const leaveRequestRepository = {
     userId: string,
     page: number,
     limit: number,
+    search?: string,
+    status?: LeaveStatus,
   ) {
     const skip = (page - 1) * limit;
 
+    const where = {
+      tenantId,
+      userId,
+      ...(status && { status }),
+      ...(search && {
+        user: {
+          OR: [
+            { firstName: { contains: search, mode: "insensitive" as const } },
+            { lastName: { contains: search, mode: "insensitive" as const } },
+            { email: { contains: search, mode: "insensitive" as const } },
+          ],
+        },
+      }),
+    };
+
     const [leaveRequests, total] = await prisma.$transaction([
       prisma.leaveRequest.findMany({
-        where: { tenantId, userId },
+        where,
         skip,
         take: limit,
         orderBy: { createdAt: "desc" },
         select: leaveRequestSelect,
       }),
-      prisma.leaveRequest.count({ where: { tenantId, userId } }),
+      prisma.leaveRequest.count({ where }),
     ]);
 
     return { leaveRequests, total };
