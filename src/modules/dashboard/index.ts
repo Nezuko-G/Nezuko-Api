@@ -14,9 +14,11 @@ import { AssetRouter } from "../asset";
 import { ReportsRouter } from "../reports";
 import { DashboardRouter } from "./dashboard.routes.js";
 import { ChatbotRouter } from "@/modules/chatbot/index.js";
+import { SuperAdminAuthRouter } from "../super-admin/super-admin.routes.js";
 
 const router = Router();
 
+router.use("/super-admin", SuperAdminAuthRouter);
 router.use("/auth", AuthRouter);
 router.use("/booking-demo-request", BookingDemoRequestRouter);
 router.use("/", InsuranceRouter);
@@ -32,5 +34,6 @@ router.use("/payrolls", PayrollRouter);
 router.use("/reports", ReportsRouter);
 router.use("/dashboard", DashboardRouter);
 router.use("/chatbot", ChatbotRouter);
+
 
 export { router as GlobalRouter };
