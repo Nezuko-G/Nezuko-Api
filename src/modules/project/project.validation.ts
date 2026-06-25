@@ -17,7 +17,7 @@ export const createProjectSchema = Joi.object({
   status: Joi.string().valid(...PROJECT_STATUSES).optional().messages({
     "any.only": "validation.project.status.invalid",
   }),
-  ownerId: Joi.string().uuid().optional().messages({
+  ownerId: Joi.string().optional().messages({
     "string.guid": "validation.project.ownerId.invalid",
   }),
   startDate: Joi.date().iso().allow(null).optional().messages({
@@ -42,7 +42,7 @@ export const updateProjectSchema = Joi.object({
   status: Joi.string().valid(...PROJECT_STATUSES).optional().messages({
     "any.only": "validation.project.status.invalid",
   }),
-  ownerId: Joi.string().uuid().allow(null).optional().messages({
+  ownerId: Joi.string().allow(null).optional().messages({
     "string.guid": "validation.project.ownerId.invalid",
   }),
   startDate: Joi.date().iso().allow(null).optional().messages({
@@ -59,7 +59,7 @@ export const updateProjectSchema = Joi.object({
 
 
 export const createTaskSchema = Joi.object({
-  projectId: Joi.string().uuid().allow(null).optional().messages({
+  projectId: Joi.string().allow(null).optional().messages({
     "string.guid": "validation.task.projectId.invalid",
   }),
   title: Joi.string().trim().min(2).max(200).required().messages({
@@ -77,7 +77,7 @@ export const createTaskSchema = Joi.object({
   priority: Joi.string().valid(...TASK_PRIORITIES).optional().messages({
     "any.only": "validation.task.priority.invalid",
   }),
-  assigneeId: Joi.string().uuid().allow(null).optional().messages({
+  assigneeId: Joi.string().allow(null).optional().messages({
     "string.guid": "validation.task.assigneeId.invalid",
   }),
   dueDate: Joi.date().iso().allow(null).optional().messages({
@@ -104,7 +104,7 @@ export const updateTaskSchema = Joi.object({
   priority: Joi.string().valid(...TASK_PRIORITIES).optional().messages({
     "any.only": "validation.task.priority.invalid",
   }),
-  assigneeId: Joi.string().uuid().allow(null).optional().messages({
+  assigneeId: Joi.string().allow(null).optional().messages({
     "string.guid": "validation.task.assigneeId.invalid",
   }),
   dueDate: Joi.date().iso().allow(null).optional().messages({
@@ -148,7 +148,7 @@ export const createSubTaskSchema = Joi.object({
   priority: Joi.string().valid(...TASK_PRIORITIES).optional().messages({
     "any.only": "validation.task.priority.invalid",
   }),
-  assigneeId: Joi.string().uuid().allow(null).optional().messages({
+  assigneeId: Joi.string().allow(null).optional().messages({
     "string.guid": "validation.task.assigneeId.invalid",
   }),
   dueDate: Joi.date().iso().allow(null).optional().messages({
