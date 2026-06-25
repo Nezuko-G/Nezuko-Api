@@ -6,7 +6,7 @@ import { requireSuperAdmin } from "@/shared/middleware/super-admin.middleware.js
 
 const router = Router();
 
-router.post("/super-admin/login", validate(superAdminLoginSchema), superAdminAuthController.login);
-router.post("/super-admin/logout", requireSuperAdmin, superAdminAuthController.logout);
+router.post("/super-admin/login", superAdminAuthController.login);
+router.post("/super-admin/logout", superAdminAuthController.logout);
 
 export { router as SuperAdminAuthRouter };
