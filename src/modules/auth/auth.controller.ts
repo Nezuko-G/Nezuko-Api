@@ -11,7 +11,6 @@ export const authController = {
         companyEmail,
         userEmail,
         password,
-        req._t,
         req,
         res
       );

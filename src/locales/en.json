@@ -22,7 +22,9 @@
     "admin_welcome": "Welcome Admin",
     "unauthorized": "You are not authorized. Please log in",
     "forbidden": "You do not have permission to access this page",
-    "user_not_found": "User not found"
+    "user_not_found": "User not found",
+    "tenant_inactive": "This company account has been deactivated",
+    "account_inactive": "Your account has been deactivated, please contact HR"
   },
   "employee": {
     "created_successfully": "Employee created successfully",
@@ -334,6 +336,23 @@
     "rate_limit_exceeded": "Too many requests. Please wait a moment before sending another message"
   },
   "validation": {
+    "auth": {
+      "company_email": {
+        "string": "Company email must be a string",
+        "format": "Company email must be a valid email address",
+        "required": "Company email is required"
+      },
+      "user_email": {
+        "string": "User email must be a string",
+        "format": "User email must be a valid email address",
+        "required": "User email is required"
+      },
+      "password": {
+        "string": "Password must be a string",
+        "min": "Password must be at least 6 characters",
+        "required": "Password is required"
+      }
+    },
     "payroll": {
       "month": {
         "required": "Month is required",

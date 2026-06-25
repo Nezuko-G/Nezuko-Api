@@ -31,3 +31,16 @@ export type BookingDemoMailPayload = {
   interests: Interest[];
   createdAt: Date;
 };
+
+export type DemoRequestFilters = {
+  page: number;
+  limit: number;
+  converted?: boolean;
+  search?: string;         
+  employeeCount?: EmployeeCount;
+  interests?: Interest[];
+  fromDate?: Date;
+  toDate?: Date;
+  sortBy?: "createdAt" | "fullName" | "companyName";
+  sortOrder?: "asc" | "desc";
+};

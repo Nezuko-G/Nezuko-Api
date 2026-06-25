@@ -5,35 +5,38 @@ import { setCookieToken } from "@/shared/utils/helpers.js";
 import { NotFoundError, UnauthorizedError } from "@/shared/errors/errors.js";
 import type { Request, Response } from "express";
 import cloudinary from "@/shared/config/cloudinary.js";
+import { cleanUser } from "./auth.helpers.js";
 
-function cleanUser(user: any) {
-    if (!user) return null;
-    const obj = { ...user };
-    delete obj.passwordHash;
-    delete obj.isActive;
-    return obj;
-}
 
 export const authService = {
     async login(
         companyEmail: string,
         userEmail: string,
         password: string,
-        t: any,
         req: Request,
         res: Response
     ) {
+        const t = req._t;
+
         const tenant = await authRepository.findTenantByCompanyEmail(companyEmail);
 
-        if (!tenant) throw new UnauthorizedError(t("auth.invalid_credentials"));
+        const user = tenant
+            ? await authRepository.findUserByEmailAndTenant(userEmail, tenant.id)
+            : null;
 
-        const user = await authRepository.findUserByEmailAndTenant(userEmail, tenant.id);
+        const isValid = user ? await comparePassword(password, user.passwordHash) : false;
 
-        if (!user) throw new UnauthorizedError(t("auth.invalid_credentials"));
+        if (!tenant || !user || !isValid) {
+            throw new UnauthorizedError(t("auth.invalid_credentials"));
+        }
 
-        const isValid = await comparePassword(password, user.passwordHash);
+        if (!tenant.isActive) {
+            throw new UnauthorizedError(t("auth.tenant_inactive"));
+        }
 
-        if (!isValid) throw new UnauthorizedError(t("auth.invalid_credentials"));
+        if (!user.isActive || user.status === "TERMINATED") {
+            throw new UnauthorizedError(t("auth.account_inactive"));
+        }
 
         const token = generateToken(user.id, user.role, "user", tenant.id);
 
@@ -47,6 +50,7 @@ export const authService = {
     async logout(res: Response) {
         res.clearCookie("jwt");
     },
+    
     async getMe(req: Request) {
         const userId = req.user?.id;
         if (!userId) throw new UnauthorizedError(req._t("auth.unauthorized"));

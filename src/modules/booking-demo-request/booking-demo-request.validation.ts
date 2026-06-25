@@ -1,16 +1,10 @@
 import Joi from "joi";
-import { phoneSchema } from "@/shared/validations/common.validations";
+import { phoneSchema } from "@/shared/validations/common.validations.js";
 
 const interestSchema = Joi.string()
   .trim()
-  .valid(
-    "CORE_HR",
-    "TALENT",
-    "SPEND",
-    "Core_HR_Suite",
-    "Talent_Suite",
-    "Spend_Suite",
-  )
+  .uppercase()
+  .valid("CORE_HR", "TALENT", "SPEND")
   .messages({
     "any.only": "booking_demo_request.validation.interests.invalid",
     "string.base": "booking_demo_request.validation.interests.invalid",
@@ -23,7 +17,7 @@ export const createBookingDemoRequestSchema = Joi.object({
     "string.min": "booking_demo_request.validation.fullName.min",
     "string.max": "booking_demo_request.validation.fullName.max",
   }),
-  email: Joi.string().trim().email().required().messages({
+  email: Joi.string().trim().email().lowercase().required().messages({
     "string.empty": "booking_demo_request.validation.email.required",
     "any.required": "booking_demo_request.validation.email.required",
     "string.email": "booking_demo_request.validation.email.invalid",
@@ -40,23 +34,10 @@ export const createBookingDemoRequestSchema = Joi.object({
     "string.min": "booking_demo_request.validation.jobTitle.min",
     "string.max": "booking_demo_request.validation.jobTitle.max",
   }),
-  phone: phoneSchema.required().messages({
-    "string.empty": "booking_demo_request.validation.phone.required",
-    "any.required": "booking_demo_request.validation.phone.required",
-    "string.pattern.base": "booking_demo_request.validation.phone.invalid",
-  }),
+  phone: phoneSchema.required(),
   employeeCount: Joi.string()
     .trim()
-    .valid(
-      "FROM_1_TO_25",
-      "FROM_26_TO_100",
-      "FROM_101_TO_250",
-      "MORE_THAN_250",
-      "1-25",
-      "26-100",
-      "101-250",
-      "250+",
-    )
+    .valid("FROM_1_TO_25", "FROM_26_TO_100", "FROM_101_TO_250", "MORE_THAN_250")
     .required()
     .messages({
       "string.empty": "booking_demo_request.validation.employeeCount.required",
