@@ -382,7 +382,7 @@
         "invalid": "Status must be one of: PLANNING, ACTIVE, ON_HOLD, COMPLETED, CANCELLED."
       },
       "ownerId": {
-        "invalid": "Owner ID must be a valid UUID."
+        "invalid": "Owner ID must be a valid ID."
       },
       "startDate": {
         "invalid": "Start date must be a valid ISO date."
@@ -409,10 +409,10 @@
         "invalid": "Priority must be one of: LOW, MEDIUM, HIGH, URGENT."
       },
       "projectId": {
-        "invalid": "Project ID must be a valid UUID."
+        "invalid": "Project ID must be a valid ID."
       },
       "assigneeId": {
-        "invalid": "Assignee ID must be a valid UUID."
+        "invalid": "Assignee ID must be a valid ID."
       },
       "dueDate": {
         "invalid": "Due date must be a valid ISO date."
