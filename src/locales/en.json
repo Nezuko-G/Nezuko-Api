@@ -118,6 +118,221 @@
     "incentive_created_successfully": "Incentive added successfully",
     "incentive_deleted_successfully": "Incentive deleted successfully"
   },
+  "company": {
+    "logo_required": "Company logo file is required",
+    "name": {
+      "min": "Company name must be at least 2 characters",
+      "max": "Company name must not exceed 120 characters"
+    },
+    "industry": {
+      "max": "Industry must not exceed 100 characters"
+    },
+    "country": {
+      "max": "Country must not exceed 100 characters"
+    },
+    "city": {
+      "max": "City must not exceed 100 characters"
+    },
+    "address": {
+      "max": "Address must not exceed 255 characters"
+    },
+    "website": {
+      "invalid": "Website must be a valid URL with domain extension like https://example.com"
+    },
+    "taxNumber": {
+      "max": "Tax number must not exceed 120 characters"
+    },
+    "commercialReg": {
+      "max": "Commercial registration must not exceed 120 characters"
+    },
+    "currency": {
+      "max": "Currency must not exceed 12 characters"
+    },
+    "timezone": {
+      "max": "Timezone must not exceed 60 characters"
+    },
+    "settings": {
+      "language": {
+        "invalid": "Language must be either ar or en"
+      },
+      "dateFormat": {
+        "invalid": "Date format must be one of DD/MM/YYYY, MM/DD/YYYY, or YYYY-MM-DD"
+      },
+      "fiscalYearStart": {
+        "invalid": "Fiscal year start must be a valid month number",
+        "range": "Fiscal year start must be between 1 and 12"
+      }
+    },
+    "attendance": {
+      "workday_range_invalid": "Work day start must be before work day end",
+      "rounding_minutes_required": "Rounding minutes are required when rounding is enabled",
+      "geofence_required": "Geofence latitude, longitude, and radius are required when geofence is enabled",
+      "time": {
+        "invalid": "Time must be in HH:mm format"
+      },
+      "workingDays": {
+        "invalid": "Working days must be an array of weekday numbers",
+        "min": "Working days must contain at least one day",
+        "unique": "Working days must not contain duplicates",
+        "range": "Working day values must be between 0 and 6"
+      },
+      "lateGraceMinutes": {
+        "invalid": "Late grace minutes must be a valid integer",
+        "range": "Late grace minutes must be between 0 and 120"
+      },
+      "earlyLeaveGrace": {
+        "invalid": "Early leave grace must be a valid integer",
+        "range": "Early leave grace must be between 0 and 240"
+      },
+      "overtimeThreshold": {
+        "invalid": "Overtime threshold must be a valid integer",
+        "range": "Overtime threshold must be between 0 and 480"
+      },
+      "roundingMinutes": {
+        "invalid": "Rounding minutes must be a valid integer",
+        "allowed": "Rounding minutes must be one of 5, 10, 15, or 30"
+      },
+      "geofenceLat": {
+        "invalid": "Geofence latitude must be a valid number",
+        "range": "Geofence latitude must be between -90 and 90"
+      },
+      "geofenceLng": {
+        "invalid": "Geofence longitude must be a valid number",
+        "range": "Geofence longitude must be between -180 and 180"
+      },
+      "geofenceRadiusM": {
+        "invalid": "Geofence radius must be a valid integer",
+        "range": "Geofence radius must be between 1 and 100000 meters"
+      }
+    }
+  },
+  "booking_demo_request": {
+    "validation": {
+      "fullName": {
+        "required": "Full name is required",
+        "min": "Full name must be at least 2 characters",
+        "max": "Full name must not exceed 100 characters"
+      },
+      "email": {
+        "required": "Email is required",
+        "invalid": "Please provide a valid email address"
+      },
+      "companyName": {
+        "required": "Company name is required",
+        "min": "Company name must be at least 2 characters",
+        "max": "Company name must not exceed 120 characters"
+      },
+      "jobTitle": {
+        "required": "Job title is required",
+        "min": "Job title must be at least 2 characters",
+        "max": "Job title must not exceed 80 characters"
+      },
+      "phone": {
+        "required": "Phone number is required",
+        "invalid": "Please provide a valid phone number in international format, e.g. +201012345678"
+      },
+      "employeeCount": {
+        "required": "Employee count is required",
+        "invalid": "Please select a valid employee count"
+      },
+      "interests": {
+        "required": "At least one interest is required",
+        "min": "At least one interest is required",
+        "invalid": "Please select valid interests"
+      }
+    },
+    "invalid_employee_count": "Invalid employee count value",
+    "invalid_interests": "Invalid interests value",
+    "duplicate_request": "Demo request already submitted"
+  },
+  "reports": {
+    "forbidden_for_type": "You do not have permission to access this report type"
+  },
+  "middleware": {
+    "token_not_provided": "No token provided. Please login",
+    "invalid_or_expired_token": "Invalid or expired token",
+    "invalid_file_type": "Only JPEG, PNG, and PDF files are allowed"
+  },
+  "Department": {
+    "DEPARTMENT_NOT_FOUND": "Department not found",
+    "CIRCULAR_REFERENCE_ERROR": "Cannot set department as its own parent or a descendant",
+    "DEPARTMENT_HAS_EMPLOYEES": "Cannot delete department because it has employees",
+    "MANAGER_NOT_IN_TENANT": "Selected manager does not belong to this company",
+    "DEPARTMENT_HAS_CHILDREN": "Cannot delete department because it has child departments"
+  },
+  "attendance": {
+    "feature_not_enabled": "Location attendance is not enabled for this organization",
+    "location_required": "Location coordinates are required",
+    "outside_geofence": "You are outside the allowed area ({{distance}}m away, max {{max}}m)",
+    "already_recorded": "Attendance already recorded for today",
+    "check_in_success": "Check-in recorded successfully",
+    "check_out_success": "Check-out recorded successfully"
+  },
+  "asset": {
+    "serial_exists": "An asset with this serial number already exists in your company.",
+    "invalid_status": "Invalid asset status provided.",
+    "not_found": "Asset not found.",
+    "not_available": "This asset is not available. It might have been assigned to someone else just now.",
+    "no_active_custody": "This asset is not currently assigned to anyone.",
+    "state_changed": "The asset state changed during processing. Please refresh the page and try again.",
+    "condition_degraded": "Warning: The asset was returned in a worse condition than when it was assigned.",
+    "already_assigned_to_user": "This asset is already assigned to this specific employee.",
+    "active_custody_exists": "Cannot retire this asset because it is currently assigned to an employee. Please return it first.",
+    "race_condition": "A race condition occurred while processing this asset. Please try again."
+  },
+  "dashboard": {
+    "employees_by_department": "Employees by Department",
+    "employees_by_status": "Employees by Status",
+    "employees_by_gender": "Employees by Gender",
+    "employees_by_job_title": "Employees by Job Title",
+    "projects_by_status": "Projects by Status",
+    "assets_by_status": "Assets by Status",
+    "assets_by_condition": "Assets by Condition",
+    "leave_requests_by_status": "Leave Requests by Status",
+    "attendance_rate_by_department": "Attendance Rate by Department (Last 30 Days)",
+    "average_salary_by_department": "Average Salary by Department",
+    "leave_requests_by_department": "Leave Requests by Department",
+    "overtime_hours_by_department": "Overtime Hours by Department",
+    "tasks_by_status": "Tasks by Status",
+    "tasks_by_priority": "Tasks by Priority",
+    "assets_by_category": "Assets by Category",
+    "insurance_enrollment_by_plan": "Insurance Enrollment by Plan",
+    "hiring_trend_12_months": "Hiring Trend (Last 12 Months)",
+    "leave_requests_trend": "Leave Requests Trend",
+    "attendance_trend": "Attendance Trend",
+    "overtime_trend": "Overtime Trend",
+    "top_departments": "Top Departments by Headcount",
+    "top_job_positions": "Top Job Positions",
+    "recent_hires": "Recent Hires (Last 30 Days)",
+    "employee_turnover": "Employee Turnover Rate",
+    "attendance_overview": "Attendance Overview",
+    "insurance_overview": "Insurance Enrollment Overview",
+    "projects_overview": "Projects & Tasks Overview",
+    "payroll_overview": "Payroll Overview",
+    "chart_not_found": "Chart not found",
+    "chart_identifier_required": "Please provide 'type' or 'name' query parameter",
+    "invalid_export_format": "Invalid export format. Use 'json' or 'csv'",
+    "csv_export_not_implemented": "CSV export is not yet implemented",
+    "export_success": "Dashboard exported successfully to PDF and CSV files"
+  },
+  "chatbot": {
+    "message_sent": "Message sent successfully",
+    "message_received": "Response received",
+    "error_sending_message": "Error sending message to chatbot",
+    "error_invalid_message": "Message cannot be empty",
+    "error_api_key_missing": "Chatbot API key is not configured",
+    "error_service_unavailable": "Chatbot service is temporarily unavailable",
+    "hr_inquiry": "What would you like to know about?",
+    "general_help": "I can help you with leave policies, attendance, payroll, benefits, insurance, and general HR inquiries",
+    "contact_hr": "For more information, please contact the HR department directly",
+    "session_started": "Chatbot session started",
+    "session_ended": "Chatbot session ended",
+    "typing": "Chatbot is typing...",
+    "no_response": "No response received from chatbot",
+    "response_timeout": "Response timeout. Please try again.",
+    "invalid_request": "Invalid request. Please try again.",
+    "rate_limit_exceeded": "Too many requests. Please wait a moment before sending another message"
+  },
   "validation": {
     "payroll": {
       "month": {
@@ -395,220 +610,5 @@
         "invalid": "Limit must be a positive integer"
       }
     }
-  },
-  "company": {
-    "logo_required": "Company logo file is required",
-    "name": {
-      "min": "Company name must be at least 2 characters",
-      "max": "Company name must not exceed 120 characters"
-    },
-    "industry": {
-      "max": "Industry must not exceed 100 characters"
-    },
-    "country": {
-      "max": "Country must not exceed 100 characters"
-    },
-    "city": {
-      "max": "City must not exceed 100 characters"
-    },
-    "address": {
-      "max": "Address must not exceed 255 characters"
-    },
-    "website": {
-      "invalid": "Website must be a valid URL with domain extension like https://example.com"
-    },
-    "taxNumber": {
-      "max": "Tax number must not exceed 120 characters"
-    },
-    "commercialReg": {
-      "max": "Commercial registration must not exceed 120 characters"
-    },
-    "currency": {
-      "max": "Currency must not exceed 12 characters"
-    },
-    "timezone": {
-      "max": "Timezone must not exceed 60 characters"
-    },
-    "settings": {
-      "language": {
-        "invalid": "Language must be either ar or en"
-      },
-      "dateFormat": {
-        "invalid": "Date format must be one of DD/MM/YYYY, MM/DD/YYYY, or YYYY-MM-DD"
-      },
-      "fiscalYearStart": {
-        "invalid": "Fiscal year start must be a valid month number",
-        "range": "Fiscal year start must be between 1 and 12"
-      }
-    },
-    "attendance": {
-      "workday_range_invalid": "Work day start must be before work day end",
-      "rounding_minutes_required": "Rounding minutes are required when rounding is enabled",
-      "geofence_required": "Geofence latitude, longitude, and radius are required when geofence is enabled",
-      "time": {
-        "invalid": "Time must be in HH:mm format"
-      },
-      "workingDays": {
-        "invalid": "Working days must be an array of weekday numbers",
-        "min": "Working days must contain at least one day",
-        "unique": "Working days must not contain duplicates",
-        "range": "Working day values must be between 0 and 6"
-      },
-      "lateGraceMinutes": {
-        "invalid": "Late grace minutes must be a valid integer",
-        "range": "Late grace minutes must be between 0 and 120"
-      },
-      "earlyLeaveGrace": {
-        "invalid": "Early leave grace must be a valid integer",
-        "range": "Early leave grace must be between 0 and 240"
-      },
-      "overtimeThreshold": {
-        "invalid": "Overtime threshold must be a valid integer",
-        "range": "Overtime threshold must be between 0 and 480"
-      },
-      "roundingMinutes": {
-        "invalid": "Rounding minutes must be a valid integer",
-        "allowed": "Rounding minutes must be one of 5, 10, 15, or 30"
-      },
-      "geofenceLat": {
-        "invalid": "Geofence latitude must be a valid number",
-        "range": "Geofence latitude must be between -90 and 90"
-      },
-      "geofenceLng": {
-        "invalid": "Geofence longitude must be a valid number",
-        "range": "Geofence longitude must be between -180 and 180"
-      },
-      "geofenceRadiusM": {
-        "invalid": "Geofence radius must be a valid integer",
-        "range": "Geofence radius must be between 1 and 100000 meters"
-      }
-    }
-  },
-  "booking_demo_request": {
-    "validation": {
-      "fullName": {
-        "required": "Full name is required",
-        "min": "Full name must be at least 2 characters",
-        "max": "Full name must not exceed 100 characters"
-      },
-      "email": {
-        "required": "Email is required",
-        "invalid": "Please provide a valid email address"
-      },
-      "companyName": {
-        "required": "Company name is required",
-        "min": "Company name must be at least 2 characters",
-        "max": "Company name must not exceed 120 characters"
-      },
-      "jobTitle": {
-        "required": "Job title is required",
-        "min": "Job title must be at least 2 characters",
-        "max": "Job title must not exceed 80 characters"
-      },
-      "phone": {
-        "required": "Phone number is required",
-        "invalid": "Please provide a valid phone number in international format, e.g. +201012345678"
-      },
-      "employeeCount": {
-        "required": "Employee count is required",
-        "invalid": "Please select a valid employee count"
-      },
-      "interests": {
-        "required": "At least one interest is required",
-        "min": "At least one interest is required",
-        "invalid": "Please select valid interests"
-      }
-    },
-    "invalid_employee_count": "Invalid employee count value",
-    "invalid_interests": "Invalid interests value",
-    "duplicate_request": "Demo request already submitted"
-  },
-  "reports": {
-    "forbidden_for_type": "You do not have permission to access this report type"
-  },
-  "middleware": {
-    "token_not_provided": "No token provided. Please login",
-    "invalid_or_expired_token": "Invalid or expired token",
-    "invalid_file_type": "Only JPEG, PNG, and PDF files are allowed"
-  },
-  "Department": {
-    "DEPARTMENT_NOT_FOUND": "Department not found",
-    "CIRCULAR_REFERENCE_ERROR": "Cannot set department as its own parent or a descendant",
-    "DEPARTMENT_HAS_EMPLOYEES": "Cannot delete department because it has employees",
-    "MANAGER_NOT_IN_TENANT": "Selected manager does not belong to this company",
-    "DEPARTMENT_HAS_CHILDREN": "Cannot delete department because it has child departments"
-  },
-  "attendance": {
-    "feature_not_enabled": "Location attendance is not enabled for this organization",
-    "location_required": "Location coordinates are required",
-    "outside_geofence": "You are outside the allowed area ({{distance}}m away, max {{max}}m)",
-    "already_recorded": "Attendance already recorded for today",
-    "check_in_success": "Check-in recorded successfully",
-    "check_out_success": "Check-out recorded successfully"
-  },
-  "asset": {
-    "serial_exists": "An asset with this serial number already exists in your company.",
-    "invalid_status": "Invalid asset status provided.",
-    "not_found": "Asset not found.",
-    "not_available": "This asset is not available. It might have been assigned to someone else just now.",
-    "no_active_custody": "This asset is not currently assigned to anyone.",
-    "state_changed": "The asset state changed during processing. Please refresh the page and try again.",
-    "condition_degraded": "Warning: The asset was returned in a worse condition than when it was assigned.",
-    "already_assigned_to_user": "This asset is already assigned to this specific employee.",
-    "active_custody_exists": "Cannot retire this asset because it is currently assigned to an employee. Please return it first.",
-    "race_condition": "A race condition occurred while processing this asset. Please try again."
-  },
-  "dashboard": {
-    "employees_by_department": "Employees by Department",
-    "employees_by_status": "Employees by Status",
-    "employees_by_gender": "Employees by Gender",
-    "employees_by_job_title": "Employees by Job Title",
-    "projects_by_status": "Projects by Status",
-    "assets_by_status": "Assets by Status",
-    "assets_by_condition": "Assets by Condition",
-    "leave_requests_by_status": "Leave Requests by Status",
-    "attendance_rate_by_department": "Attendance Rate by Department (Last 30 Days)",
-    "average_salary_by_department": "Average Salary by Department",
-    "leave_requests_by_department": "Leave Requests by Department",
-    "overtime_hours_by_department": "Overtime Hours by Department",
-    "tasks_by_status": "Tasks by Status",
-    "tasks_by_priority": "Tasks by Priority",
-    "assets_by_category": "Assets by Category",
-    "insurance_enrollment_by_plan": "Insurance Enrollment by Plan",
-    "hiring_trend_12_months": "Hiring Trend (Last 12 Months)",
-    "leave_requests_trend": "Leave Requests Trend",
-    "attendance_trend": "Attendance Trend",
-    "overtime_trend": "Overtime Trend",
-    "top_departments": "Top Departments by Headcount",
-    "top_job_positions": "Top Job Positions",
-    "recent_hires": "Recent Hires (Last 30 Days)",
-    "employee_turnover": "Employee Turnover Rate",
-    "attendance_overview": "Attendance Overview",
-    "insurance_overview": "Insurance Enrollment Overview",
-    "projects_overview": "Projects & Tasks Overview",
-    "payroll_overview": "Payroll Overview",
-    "chart_not_found": "Chart not found",
-    "chart_identifier_required": "Please provide 'type' or 'name' query parameter",
-    "invalid_export_format": "Invalid export format. Use 'json' or 'csv'",
-    "csv_export_not_implemented": "CSV export is not yet implemented",
-    "export_success": "Dashboard exported successfully to PDF and CSV files"
-  },
-  "chatbot": {
-    "message_sent": "Message sent successfully",
-    "message_received": "Response received",
-    "error_sending_message": "Error sending message to chatbot",
-    "error_invalid_message": "Message cannot be empty",
-    "error_api_key_missing": "Chatbot API key is not configured",
-    "error_service_unavailable": "Chatbot service is temporarily unavailable",
-    "hr_inquiry": "What would you like to know about?",
-    "general_help": "I can help you with leave policies, attendance, payroll, benefits, insurance, and general HR inquiries",
-    "contact_hr": "For more information, please contact the HR department directly",
-    "session_started": "Chatbot session started",
-    "session_ended": "Chatbot session ended",
-    "typing": "Chatbot is typing...",
-    "no_response": "No response received from chatbot",
-    "response_timeout": "Response timeout. Please try again.",
-    "invalid_request": "Invalid request. Please try again.",
-    "rate_limit_exceeded": "Too many requests. Please wait a moment before sending another message"
   }
 }
