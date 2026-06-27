@@ -13,6 +13,7 @@ import type {
 import type { TimesheetStatus } from "@prisma/client";
 import prisma from "@/shared/config/prisma.js";
 import { timesheetRepository } from "./timesheet.repository.js";
+import { notificationService } from "../notification/index.js";
 
 type Translator = (key: string) => string;
 
@@ -379,7 +380,18 @@ export const timesheetService = {
       input.status,
     );
 
-    return timesheetRepository.getTimesheetById(tenantId, id);
+    const updated = await timesheetRepository.getTimesheetById(tenantId, id);
+
+    if (updated) {
+      notificationService.triggerTimesheetReviewed(tenantId, {
+        id: updated.id,
+        userId: updated.userId,
+        status: updated.status,
+        date: updated.date,
+      }).catch(err => console.error("Notification Error:", err));
+    }
+
+    return updated;
   },
 
   async getOvertimeReport(

@@ -633,5 +633,58 @@
     "response_timeout": "انتهت مهلة الانتظار. يرجى المحاولة مجدداً.",
     "invalid_request": "طلب غير صحيح. يرجى المحاولة مجدداً.",
     "rate_limit_exceeded": "عدد طلبات كثير جداً. يرجى الانتظار قليلاً قبل إرسال رسالة أخرى"
+  },
+  "notification": {
+    "not_found": "الإشعار غير موجود أو غير مصرح بالوصول",
+    "task": {
+      "assigned_title": "تم تعيين مهمة جديدة",
+      "assigned_message": "تم تعيين مهمة جديدة لك: {{title}}",
+      "due_tomorrow_title": "مهمة تستحق غداً",
+      "due_tomorrow_message": "المهمة \"{{title}}\" تستحق غداً",
+      "overdue_title": "مهمة متأخرة",
+      "overdue_message": "المهمة \"{{title}}\" متأخرة عن موعدها",
+      "status_updated_title": "تم تحديث حالة المهمة",
+      "status_updated_message": "تم تحديث حالة المهمة \"{{title}}\" إلى {{status}} بواسطة {{userName}}"
+    },
+    "leave": {
+      "new_title": "طلب إجازة جديد",
+      "new_message": "تم تقديم طلب إجازة جديد من قبل {{userName}}",
+      "pending_title": "موافقة معلقة على الإجازة",
+      "pending_message": "موافقة معلقة على الإجازة لـ {{userName}}",
+      "approved_title": "تمت الموافقة على الإجازة",
+      "approved_message": "تمت الموافقة على طلب الإجازة الخاص بك من {{startDate}} إلى {{endDate}}",
+      "rejected_title": "تم رفض طلب الإجازة",
+      "rejected_message": "تم رفض طلب الإجازة الخاص بك من {{startDate}} إلى {{endDate}}"
+    },
+    "timesheet": {
+      "approved_title": "تمت الموافقة على الجدول الزمني",
+      "approved_message": "تمت الموافقة على جدولك الزمني لتاريخ {{date}}",
+      "rejected_title": "تم رفض الجدول الزمني",
+      "rejected_message": "تم رفض جدولك الزمني لتاريخ {{date}}"
+    },
+    "asset": {
+      "assigned_title": "تم تعيين أصل",
+      "assigned_message": "تم تعيين الأصل \"{{name}}\" (الرقم التسلسلي: {{serial}}) لك"
+    },
+    "insurance": {
+      "activated_title": "تم تفعيل التأمين",
+      "activated_message": "تسجيل التأمين الخاص بك للخطة \"{{planName}}\" نشط الآن",
+      "new_enrollment_title": "تسجيل تأمين جديد",
+      "new_enrollment_message": "قام {{userName}} بالتسجيل في خطة التأمين \"{{planName}}\""
+    },
+    "payroll": {
+      "approval_title": "طلب موافقة على الرواتب",
+      "approval_message": "مسودة الرواتب لـ {{month}}/{{year}} جاهزة وتتطلب موافقتك",
+      "approved_title": "تمت الموافقة على الرواتب",
+      "approved_message": "تمت الموافقة على راتبك لشهر {{month}}/{{year}}"
+    },
+    "system": {
+      "new_tenant_title": "تم تسجيل مستأجر جديد",
+      "new_tenant_message": "تم تسجيل مستأجر جديد \"{{name}}\" (الرابط: {{slug}})"
+    },
+    "employee": {
+      "missing_docs_title": "مستندات الموظف مفقودة",
+      "missing_docs_message": "الموظف {{userName}} يفتقد إلى المستندات المطلوبة"
+    }
   }
 }

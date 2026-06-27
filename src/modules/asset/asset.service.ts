@@ -9,6 +9,7 @@ import type {
   TransferAssetInput
 } from "@/shared/interfaces/asset.interface";
 import prisma from "@/shared/config/prisma";
+import { notificationService } from "../notification/index.js";
 
 const ConditionRank = {
   NEW: 4,
@@ -87,7 +88,15 @@ export const assetService = {
     }
 
     try {
-      return await assetRepository.assignAsset(input);
+      const result = await assetRepository.assignAsset(input);
+
+      notificationService.triggerAssetAssigned(input.tenantId, {
+        id: asset.id,
+        name: asset.name,
+        serialNumber: asset.serialNumber,
+      }, input.userId).catch(err => console.error("Notification Error:", err));
+
+      return result;
     } catch (error: any) {
       if (error.message === "RACE_CONDITION") {
         const msg = typeof t === 'function' ? t("asset.not_available") : "Asset not available";
@@ -138,7 +147,16 @@ export const assetService = {
     }
 
     try {
-      return await assetRepository.transferAsset(input, activeCustody.id);
+      const result = await assetRepository.transferAsset(input, activeCustody.id);
+
+      const activeCustodyAny = activeCustody as any;
+      notificationService.triggerAssetAssigned(input.tenantId, {
+        id: activeCustodyAny.asset.id,
+        name: activeCustodyAny.asset.name,
+        serialNumber: activeCustodyAny.asset.serialNumber,
+      }, input.toUserId).catch(err => console.error("Notification Error:", err));
+
+      return result;
     } catch (error: any) {
       if (error.message === "RACE_CONDITION") {
         const msg = typeof t === 'function' ? t("asset.state_changed") : "Asset state changed";

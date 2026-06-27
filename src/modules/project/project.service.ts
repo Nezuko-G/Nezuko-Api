@@ -12,6 +12,7 @@ import type {
   MyTasksFilter,
 } from "@/shared/interfaces/project.interface.js";
 import prisma from "@/shared/config/prisma.js";
+import { notificationService } from "../notification/index.js";
 
 export const projectService = {
 
@@ -127,7 +128,17 @@ export const projectService = {
       if (!assignee) throw new BadRequestError(t("task.invalid_assignee"));
     }
 
-    return projectRepository.createTask(tenantId, input);
+    const result = await projectRepository.createTask(tenantId, input);
+
+    if (result.assignee?.id) {
+      notificationService.triggerTaskAssigned(tenantId, {
+        id: result.id,
+        title: result.title,
+        assigneeId: result.assignee.id,
+      }).catch(err => console.error("Notification Error:", err));
+    }
+
+    return result;
   },
 
   async updateTask(
@@ -147,7 +158,17 @@ export const projectService = {
       if (!assignee) throw new BadRequestError(t("task.invalid_assignee"));
     }
 
-    return projectRepository.updateTask(tenantId, id, input);
+    const result = await projectRepository.updateTask(tenantId, id, input);
+
+    if (result.assignee?.id && result.assignee.id !== task.assignee?.id) {
+      notificationService.triggerTaskAssigned(tenantId, {
+        id: result.id,
+        title: result.title,
+        assigneeId: result.assignee.id,
+      }).catch(err => console.error("Notification Error:", err));
+    }
+
+    return result;
   },
 
   async updateTaskStatus(
@@ -165,7 +186,28 @@ export const projectService = {
     const isManager = ["MANAGER", "HR_ADMIN", "TENANT_OWNER"].includes(requesterRole);
 
     try {
-      return await projectRepository.updateTaskStatus(tenantId, id, input);
+      const result = await projectRepository.updateTaskStatus(tenantId, id, input);
+
+      const updater = await prisma.user.findUnique({
+        where: { id: requesterId },
+        select: { firstName: true, lastName: true, email: true },
+      });
+      const updaterName = updater ? (updater.firstName && updater.lastName ? `${updater.firstName} ${updater.lastName}` : updater.email) : "Someone";
+
+      notificationService.triggerTaskStatusUpdated(
+        tenantId,
+        {
+          id: result.id,
+          title: result.title,
+          createdById: result.createdBy.id,
+          assigneeId: result.assignee?.id,
+        },
+        task.status,
+        result.status,
+        updaterName
+      ).catch(err => console.error("Notification Error:", err));
+
+      return result;
     } catch (error: any) {
       if (error.message?.includes("sub-task")) {
         throw new BadRequestError(t("task.open_subtasks_exist"));
@@ -192,7 +234,17 @@ export const projectService = {
     }
 
     try {
-      return await projectRepository.createSubTask(tenantId, parentTaskId, input);
+      const result = await projectRepository.createSubTask(tenantId, parentTaskId, input);
+
+      if (result.assignee?.id) {
+        notificationService.triggerTaskAssigned(tenantId, {
+          id: result.id,
+          title: result.title,
+          assigneeId: result.assignee.id,
+        }).catch(err => console.error("Notification Error:", err));
+      }
+
+      return result;
     } catch (error: any) {
       if (error.message?.includes("one level")) {
         throw new BadRequestError(t("task.subtask_nesting_not_allowed"));

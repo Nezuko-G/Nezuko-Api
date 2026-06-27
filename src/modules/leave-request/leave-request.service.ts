@@ -10,6 +10,7 @@ import type {
 } from "@/shared/interfaces/leave-request.interface";
 import { leaveRequestRepository } from "./leave-request.repository.js";
 import { LeaveStatus } from "@prisma/client";
+import { notificationService } from "../notification/index.js";
 
 const MAX_LEAVE_DAYS_PER_REQUEST = 30;
 
@@ -93,12 +94,19 @@ export const leaveRequestService = {
       throw new ConflictError(t("leave_request.duplicate_request"));
     }
 
-    return leaveRequestRepository.createLeaveRequest({
+    const result = await leaveRequestRepository.createLeaveRequest({
       ...input,
       startDate: normalizedStartDate,
       endDate: normalizedEndDate,
       reason: normalizedReason || null,
     });
+
+    notificationService.triggerLeaveCreated(input.tenantId, {
+      id: result.id,
+      userId: input.userId,
+    }).catch(err => console.error("Notification Error:", err));
+
+    return result;
   },
 
   async getLeaveRequests(
@@ -166,6 +174,14 @@ export const leaveRequestService = {
     if (!updated) {
       throw new ConflictError(t("leave_request.not_pending"));
     }
+
+    notificationService.triggerLeaveReviewed(tenantId, {
+      id: updated.id,
+      userId: updated.userId,
+      status: updated.status,
+      startDate: updated.startDate,
+      endDate: updated.endDate,
+    }).catch(err => console.error("Notification Error:", err));
 
     return updated;
   },

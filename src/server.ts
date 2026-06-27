@@ -4,6 +4,7 @@ dotenv.config({ quiet: true });
 import http from "http";
 import app from "@/app.js";
 import prisma from "@/shared/config/prisma.js";
+import { notificationService } from "./modules/notification/notification.service.js";
 
 const PORT = normalizePort(process.env.PORT || "5000");
 app.set("port", PORT);
@@ -14,6 +15,16 @@ async function startServer() {
   try {
     await prisma.$connect();
     console.log("Database connected successfully");
+
+    notificationService.checkTaskDeadlines().catch((err) => {
+      console.error("Failed to check task deadlines on boot:", err);
+    });
+
+    setInterval(() => {
+      notificationService.checkTaskDeadlines().catch((err) => {
+        console.error("Failed to check task deadlines in interval:", err);
+      });
+    }, 24 * 60 * 60 * 1000);
 
     server.listen(PORT);
     server.on("error", onError);

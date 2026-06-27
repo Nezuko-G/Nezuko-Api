@@ -7,6 +7,7 @@ import type { CreateEmployeeInput, UpdateEmployeeInput } from "@/shared/interfac
 import type { Request, Response } from "express";
 import cloudinary from "@/shared/config/cloudinary.js";
 import prisma from "@/shared/config/prisma.js";
+import { notificationService } from "../notification/index.js";
 
 
 export const employeeService = {
@@ -40,6 +41,9 @@ export const employeeService = {
     //   employeeCode: employee.employeeCode!,
     //   tempPassword,
     // });
+
+    notificationService.triggerMissingDocumentsAlert(input.tenantId, employee.id)
+      .catch(err => console.error("Notification Error:", err));
 
     return {
       ...employee,

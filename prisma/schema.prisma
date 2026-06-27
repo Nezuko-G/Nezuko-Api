@@ -15,6 +15,8 @@ model SuperAdmin {
   createdAt    DateTime @default(now()) @map("created_at")
   updatedAt    DateTime @updatedAt @map("updated_at")
 
+  notifications Notification[]
+
   @@map("super_admins")
 }
 
@@ -56,6 +58,7 @@ model Tenant {
   payrollEntries       PayrollEntry[]
   incentives           Incentive[]
   chatSessions         ChatSession[]
+  notifications        Notification[]
 
   @@map("tenants")
 }
@@ -155,6 +158,7 @@ model User {
   createdPayrolls      PayrollRun[]          @relation("CreatedPayrolls")
   approvedPayrolls     PayrollRun[]          @relation("ApprovedPayrolls")
   chatSessions         ChatSession[]
+  notifications        Notification[]
 
   @@unique([tenantId, email])
   @@map("users")
@@ -609,4 +613,50 @@ model Incentive {
   creator      User          @relation("CreatedIncentives", fields: [createdBy], references: [id])
 
   @@map("incentives")
+}
+
+model Notification {
+  id           String               @id @default(uuid())
+  tenantId     String?              @map("tenant_id")
+  userId       String?              @map("user_id")
+  superAdminId String?              @map("super_admin_id")
+  title        String
+  message      String
+  type         NotificationType
+  priority     NotificationPriority @default(MEDIUM)
+  isSeen       Boolean              @default(false) @map("is_seen")
+  seenAt       DateTime?            @map("seen_at")
+  actionUrl    String?              @map("action_url")
+  metadata     Json?
+  deletedAt    DateTime?            @map("deleted_at")
+  createdAt    DateTime             @default(now()) @map("created_at")
+  updatedAt    DateTime             @updatedAt @map("updated_at")
+
+  tenant     Tenant?     @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  user       User?       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  superAdmin SuperAdmin? @relation(fields: [superAdminId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId])
+  @@index([userId])
+  @@index([superAdminId])
+  @@index([isSeen])
+  @@index([createdAt])
+  @@map("notifications")
+}
+
+enum NotificationType {
+  TASK
+  LEAVE
+  TIMESHEET
+  ASSET
+  INSURANCE
+  PAYROLL
+  SYSTEM
+}
+
+enum NotificationPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
 }

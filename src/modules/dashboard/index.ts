@@ -15,6 +15,7 @@ import { ReportsRouter } from "../reports";
 import { DashboardRouter } from "./dashboard.routes.js";
 import { ChatbotRouter } from "@/modules/chatbot/index.js";
 import { SuperAdminAuthRouter } from "../super-admin/super-admin.routes.js";
+import { NotificationRouter } from "../notification/index.js";
 
 const router = Router();
 
@@ -34,6 +35,7 @@ router.use("/payrolls", PayrollRouter);
 router.use("/reports", ReportsRouter);
 router.use("/dashboard", DashboardRouter);
 router.use("/chatbot", ChatbotRouter);
+router.use("/notifications", NotificationRouter);
 
 
 export { router as GlobalRouter };

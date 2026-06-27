@@ -629,5 +629,58 @@
         "invalid": "Limit must be a positive integer"
       }
     }
+  },
+  "notification": {
+    "not_found": "Notification not found or access denied",
+      "task": {
+        "assigned_title": "New Task Assigned",
+        "assigned_message": "You have been assigned a new task: {{title}}",
+        "due_tomorrow_title": "Task Due Tomorrow",
+        "due_tomorrow_message": "The task \"{{title}}\" is due tomorrow",
+        "overdue_title": "Task Overdue",
+        "overdue_message": "The task \"{{title}}\" is overdue",
+        "status_updated_title": "Task Status Updated",
+        "status_updated_message": "Task \"{{title}}\" status updated to {{status}} by {{userName}}"
+      },
+      "leave": {
+        "new_title": "New Leave Request",
+        "new_message": "New leave request submitted by {{userName}}",
+        "pending_title": "Pending Leave Approval",
+        "pending_message": "Pending leave approval for {{userName}}",
+        "approved_title": "Leave Approved",
+        "approved_message": "Your leave request from {{startDate}} to {{endDate}} has been approved",
+        "rejected_title": "Leave Rejected",
+        "rejected_message": "Your leave request from {{startDate}} to {{endDate}} has been rejected"
+      },
+      "timesheet": {
+        "approved_title": "Timesheet Approved",
+        "approved_message": "Your timesheet for {{date}} has been approved",
+        "rejected_title": "Timesheet Rejected",
+        "rejected_message": "Your timesheet for {{date}} has been rejected"
+      },
+      "asset": {
+        "assigned_title": "Asset Assigned",
+        "assigned_message": "Asset \"{{name}}\" (Serial: {{serial}}) has been assigned to you"
+      },
+      "insurance": {
+        "activated_title": "Insurance Activated",
+        "activated_message": "Your insurance enrollment for plan \"{{planName}}\" is now active",
+        "new_enrollment_title": "New Insurance Enrollment",
+        "new_enrollment_message": "{{userName}} has enrolled in insurance plan \"{{planName}}\""
+      },
+      "payroll": {
+        "approval_title": "Payroll Approval Request",
+        "approval_message": "Payroll run for {{month}}/{{year}} is ready and requires your approval",
+        "approved_title": "Payroll Approved",
+        "approved_message": "Your payroll for {{month}}/{{year}} has been approved"
+      },
+      "system": {
+        "new_tenant_title": "New Tenant Registered",
+        "new_tenant_message": "A new tenant \"{{name}}\" (Slug: {{slug}}) has registered"
+      },
+      "employee": {
+        "missing_docs_title": "Missing Employee Documents",
+        "missing_docs_message": "Employee {{userName}} is missing required documents"
+    }
   }
 }

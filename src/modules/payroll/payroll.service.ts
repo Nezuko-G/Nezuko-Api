@@ -1,4 +1,5 @@
 import { payrollRepository } from "./payroll.repository.js";
+import { notificationService } from "../notification/index.js";
 import { NotFoundError, BadRequestError, ConflictError, ForbiddenError } from "@/shared/errors/errors.js";
 import { PayrollStatus } from "@prisma/client";
 import type {
@@ -35,7 +36,12 @@ export const payrollService = {
     );
     if (existing) throw new ConflictError(t("payroll.run_already_exists"));
 
-    return payrollRepository.createRun(tenantId, input);
+    const result = await payrollRepository.createRun(tenantId, input);
+
+    notificationService.triggerPayrollCreated(tenantId, input.month, input.year)
+      .catch(err => console.error("Notification Error:", err));
+
+    return result;
   },
 
   async approveRun(tenantId: string, id: string, approverId: string, t: any) {
@@ -46,7 +52,12 @@ export const payrollService = {
       throw new BadRequestError(t("payroll.run_not_draft"));
     }
 
-    return payrollRepository.approveRun(tenantId, id, approverId);
+    const result = await payrollRepository.approveRun(tenantId, id, approverId);
+
+    notificationService.triggerPayrollApproved(tenantId, id, run.month, run.year)
+      .catch(err => console.error("Notification Error:", err));
+
+    return result;
   },
 
   async markPaid(tenantId: string, id: string, t: any) {

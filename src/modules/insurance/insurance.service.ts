@@ -13,6 +13,7 @@ import type {
 } from "@/shared/interfaces/insurance.interface.js";
 import { insuranceRepository } from "./insurance.repository.js";
 import prisma from "@/shared/config/prisma.js";
+import { notificationService } from "../notification/index.js";
 
 type Translator = (key: string) => string;
 
@@ -171,7 +172,7 @@ export const insuranceService = {
         plan.salaryPercentage,
       );
 
-      return insuranceRepository.createInsuranceEnrollment(
+      const enrollment = await insuranceRepository.createInsuranceEnrollment(
         {
           ...input,
           tenantId,
@@ -181,6 +182,11 @@ export const insuranceService = {
         },
         tx,
       );
+
+      notificationService.triggerInsuranceActivated(tenantId, plan.name, input.userId)
+        .catch(err => console.error("Notification Error:", err));
+
+      return enrollment;
     });
   },
 
