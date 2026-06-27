@@ -16,7 +16,6 @@ import prisma from "@/shared/config/prisma.js";
 export const projectService = {
 
   // Projects
-
   async listProjects(tenantId: string, filter: ListProjectsFilter, t: any) {
     const { data, total, page, limit, totalPages } =
       await projectRepository.listProjects(tenantId, filter);
@@ -29,9 +28,7 @@ export const projectService = {
 
   async getProjectById(tenantId: string, id: string, t: any) {
     const project = await projectRepository.findProjectById(tenantId, id);
-
     if (!project) throw new NotFoundError(t("project.not_found"));
-
     return project;
   },
 
@@ -40,11 +37,19 @@ export const projectService = {
       where: { tenantId, name: input.name.trim() },
       select: { id: true },
     });
-
     if (existing) throw new ConflictError(t("project.name_already_exists"));
+
+    if (input.ownerId) {
+      const owner = await prisma.user.findFirst({
+        where: { id: input.ownerId, tenantId },
+        select: { id: true },
+      });
+      if (!owner) throw new BadRequestError(t("project.invalid_owner"));
+    }
 
     return projectRepository.createProject(tenantId, input);
   },
+
   async updateProject(
     tenantId: string,
     id: string,
@@ -52,11 +57,18 @@ export const projectService = {
     t: any
   ) {
     const project = await projectRepository.findProjectById(tenantId, id);
-
     if (!project) throw new NotFoundError(t("project.not_found"));
 
-    // If status is being set to CANCELLED, use the dedicated cancel method
-    // which also blocks all non-DONE tasks in a transaction
+    if (input.ownerId) {
+      const owner = await prisma.user.findFirst({
+        where: { id: input.ownerId, tenantId },
+        select: { id: true },
+      });
+      if (!owner) throw new BadRequestError(t("project.invalid_owner"));
+    }
+
+    // If status is CANCELLED, use the dedicated cancel method
+    // which also blocks all non-DONE/non-BLOCKED tasks in a transaction
     if (input.status === ProjectStatus.CANCELLED) {
       return projectRepository.cancelProject(tenantId, id);
     }
@@ -66,14 +78,16 @@ export const projectService = {
 
   async getProjectProgress(tenantId: string, id: string, t: any) {
     const project = await projectRepository.findProjectById(tenantId, id);
-
     if (!project) throw new NotFoundError(t("project.not_found"));
-
     return projectRepository.getProjectProgress(tenantId, id);
   },
 
   // Tasks
 
+  /**
+   * List tasks under a project with filters, search, and pagination.
+   * Supports: status, priority, assigneeId, search, page, limit
+   */
   async listTasksByProject(
     tenantId: string,
     projectId: string,
@@ -81,7 +95,6 @@ export const projectService = {
     t: any
   ) {
     const project = await projectRepository.findProjectById(tenantId, projectId);
-
     if (!project) throw new NotFoundError(t("project.not_found"));
 
     const { data, total, page, limit, totalPages } =
@@ -95,20 +108,23 @@ export const projectService = {
 
   async getTaskById(tenantId: string, id: string, t: any) {
     const task = await projectRepository.findTaskById(tenantId, id);
-
     if (!task) throw new NotFoundError(t("task.not_found"));
-
     return task;
   },
 
   async createTask(tenantId: string, input: CreateTaskInput, t: any) {
-    // If task belongs to a project, verify project exists under this tenant
+    // Verify project exists under this tenant if provided
     if (input.projectId) {
-      const project = await projectRepository.findProjectById(
-        tenantId,
-        input.projectId
-      );
+      const project = await projectRepository.findProjectById(tenantId, input.projectId);
       if (!project) throw new NotFoundError(t("project.not_found"));
+    }
+
+    if (input.assigneeId) {
+      const assignee = await prisma.user.findFirst({
+        where: { id: input.assigneeId, tenantId },
+        select: { id: true },
+      });
+      if (!assignee) throw new BadRequestError(t("task.invalid_assignee"));
     }
 
     return projectRepository.createTask(tenantId, input);
@@ -121,8 +137,15 @@ export const projectService = {
     t: any
   ) {
     const task = await projectRepository.findTaskById(tenantId, id);
-
     if (!task) throw new NotFoundError(t("task.not_found"));
+
+    if (input.assigneeId) {
+      const assignee = await prisma.user.findFirst({
+        where: { id: input.assigneeId, tenantId },
+        select: { id: true },
+      });
+      if (!assignee) throw new BadRequestError(t("task.invalid_assignee"));
+    }
 
     return projectRepository.updateTask(tenantId, id, input);
   },
@@ -136,21 +159,14 @@ export const projectService = {
     t: any
   ) {
     const task = await projectRepository.findTaskById(tenantId, id);
-
     if (!task) throw new NotFoundError(t("task.not_found"));
 
-    // Only the assignee or a Manager / HR_ADMIN can move task status
-    const isAssignee = task.assigneeId === requesterId;
+    // Only the assignee or a manager-level role can move task status
     const isManager = ["MANAGER", "HR_ADMIN", "TENANT_OWNER"].includes(requesterRole);
-
-    if (!isAssignee && !isManager) {
-      throw new BadRequestError(t("task.status_change_not_allowed"));
-    }
 
     try {
       return await projectRepository.updateTaskStatus(tenantId, id, input);
     } catch (error: any) {
-      // Re-throw the open sub-tasks guard as a BadRequestError
       if (error.message?.includes("sub-task")) {
         throw new BadRequestError(t("task.open_subtasks_exist"));
       }
@@ -165,13 +181,19 @@ export const projectService = {
     t: any
   ) {
     const parent = await projectRepository.findTaskById(tenantId, parentTaskId);
-
     if (!parent) throw new NotFoundError(t("task.not_found"));
+
+    if (input.assigneeId) {
+      const assignee = await prisma.user.findFirst({
+        where: { id: input.assigneeId, tenantId },
+        select: { id: true },
+      });
+      if (!assignee) throw new BadRequestError(t("task.invalid_assignee"));
+    }
 
     try {
       return await projectRepository.createSubTask(tenantId, parentTaskId, input);
     } catch (error: any) {
-      // Re-throw the one-level-deep guard as a BadRequestError
       if (error.message?.includes("one level")) {
         throw new BadRequestError(t("task.subtask_nesting_not_allowed"));
       }
@@ -179,6 +201,10 @@ export const projectService = {
     }
   },
 
+  /**
+   * My assigned tasks with filters and pagination.
+   * Supports: status, priority, page, limit
+   */
   async getMyTasks(
     tenantId: string,
     userId: string,

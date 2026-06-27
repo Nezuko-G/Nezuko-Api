@@ -21,11 +21,6 @@ const isManagerOrHR = checkRole([
   UserRole.MANAGER,
 ]);
 
-const isHROrOwner = checkRole([
-  UserRole.TENANT_OWNER,
-  UserRole.HR_ADMIN,
-]);
-
 router.use(requireAuth);
 
 router.get("/", isManagerOrHR, projectController.listProjects);
@@ -33,15 +28,16 @@ router.post("/", isManagerOrHR, validate(createProjectSchema), projectController
 router.get("/:id", isManagerOrHR, projectController.getProjectById);
 router.patch("/:id", isManagerOrHR, validate(updateProjectSchema), projectController.updateProject);
 router.get("/:id/progress", isManagerOrHR, projectController.getProjectProgress);
-router.get("/:id/tasks", requireAuth, projectController.listTasksByProject);
+router.get("/:id/tasks", isManagerOrHR, projectController.listTasksByProject);
+
 
 router.get("/tasks/me", requireAuth, projectController.getMyTasks);
-router.get("/tasks/report/overdue", isManagerOrHR, projectController.getOverdueReport);
+router.get("/tasks/overdue-report", isManagerOrHR, projectController.getOverdueReport);
 router.post("/tasks", isManagerOrHR, validate(createTaskSchema), projectController.createTask);
-router.patch("/tasks/status/:id", requireAuth, validate(updateTaskStatusSchema), projectController.updateTaskStatus);
-router.post("/tasks/subtasks/:id", isManagerOrHR, validate(createSubTaskSchema), projectController.createSubTask);
 
 router.get("/tasks/:id", requireAuth, projectController.getTaskById);
 router.patch("/tasks/:id", isManagerOrHR, validate(updateTaskSchema), projectController.updateTask);
+router.patch("/tasks/:id/status", requireAuth, validate(updateTaskStatusSchema), projectController.updateTaskStatus);
+router.post("/tasks/:id/subtasks", isManagerOrHR, validate(createSubTaskSchema), projectController.createSubTask);
 
 export { router as ProjectRouter };
