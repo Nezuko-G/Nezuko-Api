@@ -1,12 +1,433 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Nezuko API</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background-color: #0d1b2a;
+      color: #ffffff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.2rem 2.5rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      background-color: #0a1520;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1.2rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    .logo-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #4fc3f7;
+      display: inline-block;
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 2rem;
+    }
+
+    nav ul a {
+      color: rgba(255, 255, 255, 0.65);
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: color 0.2s;
+    }
+
+    nav ul a:hover {
+      color: #fff;
+    }
+
+    .nav-btn {
+      background: #ffffff;
+      color: #0d1b2a;
+      border: none;
+      padding: 0.5rem 1.2rem;
+      border-radius: 6px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .nav-btn:hover {
+      background: #d0e8ff;
+    }
+
+    /* Hero */
+    .hero {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 5rem 2rem 3rem;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(79, 195, 247, 0.12);
+      border: 1px solid rgba(79, 195, 247, 0.3);
+      color: #4fc3f7;
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 0.3rem 0.85rem;
+      border-radius: 20px;
+      margin-bottom: 1.5rem;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    .badge-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #4fc3f7;
+      animation: pulse 1.8s infinite;
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0.3;
+      }
+    }
+
+    h1 {
+      font-size: 3.2rem;
+      font-weight: 700;
+      line-height: 1.15;
+      margin-bottom: 1.2rem;
+      max-width: 640px;
+    }
+
+    h1 span {
+      color: #4fc3f7;
+    }
+
+    .subtitle {
+      font-size: 1.05rem;
+      color: rgba(255, 255, 255, 0.55);
+      max-width: 480px;
+      line-height: 1.7;
+      margin-bottom: 2.5rem;
+    }
+
+    .actions {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .btn-primary {
+      background: #ffffff;
+      color: #0d1b2a;
+      border: none;
+      padding: 0.75rem 1.8rem;
+      border-radius: 7px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-primary:hover {
+      background: #c8e6ff;
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      padding: 0.75rem 1.8rem;
+      border-radius: 7px;
+      font-size: 0.95rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    .btn-outline:hover {
+      border-color: rgba(255, 255, 255, 0.5);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    /* Stats */
+    .stats {
+      display: flex;
+      justify-content: center;
+      gap: 3rem;
+      padding: 2.5rem 2rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.07);
+      flex-wrap: wrap;
+    }
+
+    .stat-item {
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    .stat-label {
+      font-size: 0.8rem;
+      color: rgba(255, 255, 255, 0.45);
+      margin-top: 2px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* Code block */
+    .code-section {
+      padding: 3rem 2rem;
+      display: flex;
+      justify-content: center;
+    }
+
+    .code-card {
+      background: #0a1520;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      width: 100%;
+      max-width: 620px;
+      overflow: hidden;
+    }
+
+    .code-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.75rem 1.2rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .code-dots {
+      display: flex;
+      gap: 6px;
+    }
+
+    .code-dots span {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .dot-r {
+      background: #ff5f57;
+    }
+
+    .dot-y {
+      background: #febc2e;
+    }
+
+    .dot-g {
+      background: #28c840;
+    }
+
+    .code-lang {
+      font-size: 0.75rem;
+      color: rgba(255, 255, 255, 0.35);
+      font-family: monospace;
+    }
+
+    pre {
+      padding: 1.5rem;
+      font-family: 'Courier New', monospace;
+      font-size: 0.85rem;
+      line-height: 1.7;
+      color: rgba(255, 255, 255, 0.75);
+      overflow-x: auto;
+    }
+
+    .kw {
+      color: #4fc3f7;
+    }
+
+    .str {
+      color: #a5d6a7;
+    }
+
+    .fn {
+      color: #fff59d;
+    }
+
+    .cm {
+      color: rgba(255, 255, 255, 0.3);
+    }
+
+    /* Features */
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.2rem;
+      padding: 1rem 2.5rem 4rem;
+      max-width: 900px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .feature-card {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 10px;
+      padding: 1.4rem;
+    }
+
+    .feature-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin-bottom: 0.4rem;
+    }
+
+    .feature-desc {
+      font-size: 0.82rem;
+      color: rgba(255, 255, 255, 0.45);
+      line-height: 1.6;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 1.5rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.07);
+      font-size: 0.8rem;
+      color: rgba(255, 255, 255, 0.3);
+    }
+  </style>
 </head>
+
 <body>
-  <h1>Nezuko API</h1>
-  <p>API is running.</p>
+
+  <nav>
+    <div class="logo">
+      <span class="logo-dot"></span>
+      Nezuko API
+    </div>
+    <ul>
+      <li><a href="#">Docs</a></li>
+      <li><a href="#">Endpoints</a></li>
+      <li><a href="#">Pricing</a></li>
+    </ul>
+    <button class="nav-btn">Get API Key</button>
+  </nav>
+
+  <section class="hero">
+    <div class="badge">
+      <span class="badge-dot"></span>
+      API is running
+    </div>
+    <h1>Fast & simple <span>REST API</span> for your projects</h1>
+    <p class="subtitle">Nezuko API gives you a clean, reliable interface to power your applications. Minimal setup,
+      maximum speed.</p>
+    <div class="actions">
+      <button class="btn-primary">View Docs</button>
+      <button class="btn-outline">Try it live →</button>
+    </div>
+  </section>
+
+  <div class="stats">
+    <div class="stat-item">
+      <div class="stat-value">99.9%</div>
+      <div class="stat-label">Uptime</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value">&lt;50ms</div>
+      <div class="stat-label">Avg. Response</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value">REST</div>
+      <div class="stat-label">Protocol</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value">Free</div>
+      <div class="stat-label">Tier Available</div>
+    </div>
+  </div>
+
+  <div class="code-section">
+    <div class="code-card">
+      <div class="code-header">
+        <div class="code-dots">
+          <span class="dot-r"></span>
+          <span class="dot-y"></span>
+          <span class="dot-g"></span>
+        </div>
+        <span class="code-lang">JavaScript</span>
+      </div>
+      <pre><span class="cm">// Quick example</span>
+<span class="kw">const</span> res = <span class="kw">await</span> <span class="fn">fetch</span>(<span class="str">'https://api.nezuko.dev/v1/data'</span>, {
+  method: <span class="str">'GET'</span>,
+  headers: {
+    <span class="str">'Authorization'</span>: <span class="str">'Bearer YOUR_API_KEY'</span>,
+    <span class="str">'Content-Type'</span>: <span class="str">'application/json'</span>
+  }
+});
+
+<span class="kw">const</span> data = <span class="kw">await</span> res.<span class="fn">json</span>();
+console.<span class="fn">log</span>(data);</pre>
+    </div>
+  </div>
+
+  <div class="features">
+    <div class="feature-card">
+      <div class="feature-title">Lightning fast</div>
+      <div class="feature-desc">Sub-50ms average response time across all endpoints.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-title">Secure by default</div>
+      <div class="feature-desc">API key auth with HTTPS enforced on every request.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-title">Simple JSON</div>
+      <div class="feature-desc">Clean, predictable JSON responses with no surprises.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-title">Full docs</div>
+      <div class="feature-desc">Every endpoint documented with examples and error codes.</div>
+    </div>
+  </div>
+
+  <footer>© 2025 Nezuko API — All rights reserved</footer>
+
 </body>
+
 </html>
