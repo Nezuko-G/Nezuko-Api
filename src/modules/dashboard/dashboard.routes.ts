@@ -6,38 +6,14 @@ import { UserRole } from "@prisma/client";
 
 const router = Router();
 
-const canAccessDashboard = checkRole([
-  UserRole.TENANT_OWNER,
-  UserRole.HR_ADMIN,
-  UserRole.MANAGER,
-]);
+const DASHBOARD_ROLES: UserRole[] = [
+    UserRole.TENANT_OWNER,
+    UserRole.HR_ADMIN,
+    UserRole.MANAGER,
+];
 
-router.use(requireAuth, canAccessDashboard);
+router.use(requireAuth, checkRole(DASHBOARD_ROLES));
 
-router.get(
-    "/overview", 
-    dashboardController.getOverview
-);
-
-
-router.get(
-    "/metrics/summary", 
-    dashboardController.getMetricsSummary
-);
-
-router.get(
-    "/insights", 
-    dashboardController.getInsights
-);
-
-router.get(
-    "/chart", 
-    dashboardController.getChart
-);
-
-router.get(
-    "/export", 
-    dashboardController.exportData
-);
+router.get("/overview", dashboardController.getOverview);
 
 export { router as DashboardRouter };
